@@ -22,7 +22,6 @@ class Dicot
       end
 
       def label(data)
-        require 'pry'; binding.pry
         model.label(data)
       end
 
