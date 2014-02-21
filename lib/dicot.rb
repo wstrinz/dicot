@@ -30,7 +30,7 @@ class Dicot
       end
 
       def retrain(data)
-        open('model/train.txt','w+') do |f|
+        open('model/train.txt','a') do |f|
           f.write "\n"
           data.each do |d|
             f.write d.join(" ") + "\n"

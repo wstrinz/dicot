@@ -26,7 +26,6 @@ describe Dicot do
     end
 
     it "can be retrained" do
-
       str = "Where's Will (on the Ragnarok morning)"
       untrained = %w{O O O O O O O O O}
       trained = %w{O O O O O O B-TS I-TS O}
@@ -36,6 +35,15 @@ describe Dicot do
       Dicot::Trainer.retrain(Dicot::Tokenizer.tokenize(str).zip(trained))
 
       Dicot.label(str).first.map(&:last).should == trained
+    end
+
+    it "still correctly labels known strings" do
+      str1 = "Where's Will (Friday morning)"
+      str2 = "Where's Will (on the Ragnarok morning)"
+      trained = %w{O O O O O O B-TS I-TS O}
+
+      Dicot::Trainer.retrain(Dicot::Tokenizer.tokenize(str2).zip(trained))
+      Dicot.label(str1).first.map(&:last).should == %w{O O O O B-TS I-TS O}
     end
   end
 end
