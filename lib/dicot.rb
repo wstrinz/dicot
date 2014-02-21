@@ -21,12 +21,24 @@ class Dicot
         @model ||= Wapiti.load('model/model.mod')
       end
 
+      def save
+        model.compact.save
+      end
+
       def label(data)
         model.label(data)
       end
 
-      def train(data)
+      def retrain(data)
+        open('model/train.txt','w+') do |f|
+          f.write "\n"
+          data.each do |d|
+            f.write d.join(" ") + "\n"
+          end
+        end
 
+        model.train('model/train.txt')
+        model
       end
     end
   end
