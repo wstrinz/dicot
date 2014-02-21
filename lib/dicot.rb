@@ -37,7 +37,7 @@ class Dicot
     def label(string)
       tokens = Tokenizer.tokenize(string)
       labels = Trainer.label([tokens])
-      puts labels
+      labels
     end
   end
 end
