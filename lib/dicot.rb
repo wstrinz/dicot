@@ -2,38 +2,38 @@ require 'wapiti'
 require 'treat'
 
 class Dicot
-  class Tokenizer
-    extend Treat::Core::DSL
-    class << self
-      def tokenize(string)
-        e = entity string
-        e.apply(:chunk, :tokenize)
-        e.tokens.map(&:to_s)
-      end
-    end
-  end
+	class Tokenizer
+		extend Treat::Core::DSL
+		class << self
+			def tokenize(string)
+				e = entity string
+				e.apply(:chunk, :tokenize)
+				e.tokens.map(&:to_s)
+			end
+		end
+	end
 end
 
 class Dicot
-  class Trainer
-    class << self
-      def model
+	class Trainer
+		class << self
+			def model
 				unless File.exist? 'model/model.mod'
 					Wapiti::Model.train([['zsdxye O','ZxFDSG I', 'd O']], pattern: 'model/pattern.txt').compact.save('model/model.mod')
 				end
 
-        @model ||= Wapiti.load('model/model.mod')
-      end
+				@model ||= Wapiti.load('model/model.mod')
+			end
 
-      def save
-        model.compact.save
-      end
+			def save
+				model.compact.save
+			end
 
-      def label(data)
-        model.label(data)
-      end
+			def label(data)
+				model.label(data)
+			end
 
-      def retrain(data=:none)
+			def retrain(data=:none)
 				unless data == :none
 					open('model/train.txt','a') do |f|
 						f.write "\n"
@@ -56,9 +56,9 @@ class Dicot
 					training_buffer.clear
 				end
 
-        @model = Wapiti::Model.train('model/train.txt', pattern: 'model/pattern.txt')
-        model
-      end
+				@model = Wapiti::Model.train('model/train.txt', pattern: 'model/pattern.txt')
+				model
+			end
 
 			def training_buffer
 				@training_buffer ||= []
@@ -67,17 +67,17 @@ class Dicot
 			def add_training_seq(data)
 				training_buffer << data
 			end
-    end
-  end
+		end
+	end
 end
 
 class Dicot
-  class << self
-    def label(string)
-      tokens = Tokenizer.tokenize(string)
-      labels = Trainer.label([tokens])
-      labels
-    end
+	class << self
+		def label(string)
+			tokens = Tokenizer.tokenize(string)
+			labels = Trainer.label([tokens])
+			labels
+		end
 
 		def train(string, tags)
 			char_pos = 0
@@ -96,5 +96,5 @@ class Dicot
 
 			Trainer.add_training_seq(data)
 		end
-  end
+	end
 end
