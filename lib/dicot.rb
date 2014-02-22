@@ -33,15 +33,30 @@ class Dicot
         model.label(data)
       end
 
-      def retrain(data)
-        open('model/train.txt','a') do |f|
-          f.write "\n"
-          data.each do |d|
-            f.write d.join(" ") + "\n"
-          end
-        end
+      def retrain(data=:none)
+				unless data == :none
+					open('model/train.txt','a') do |f|
+						f.write "\n"
+						data.each do |d|
+							f.write d.join(" ") + "\n"
+						end
+					end
+				end
+				if training_buffer.size > 0
+					open('model/train.txt','a') do |f|
+						f.write "\n"
+						training_buffer.each do |ent|
+							ent.each do |d|
+								f.write d.join(" ") + "\n"
+							end
+							f.write "\n"	
+						end
+					end
 
-        model.train('model/train.txt')
+					training_buffer.clear
+				end
+
+        @model = Wapiti::Model.train('model/train.txt', pattern: 'model/pattern.txt')
         model
       end
 
@@ -75,10 +90,10 @@ class Dicot
 				end
 
 				char_pos += token.size
-				char_pos += 1 if string[char_pos + 1] == " "
+				char_pos += 1 if string[char_pos] == " "
+				#require 'pry'; binding.pry
 			end
 
-				#require 'pry'; binding.pry
 			Trainer.add_training_seq(data)
 		end
   end

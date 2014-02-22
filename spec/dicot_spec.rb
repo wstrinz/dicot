@@ -58,13 +58,39 @@ describe Dicot do
 	end
 
 	describe 'training input' do
-		let(:string) { "Where's Somebody? (Wednesday Afternoon)"  }
-		let(:tags) { {[18, 27] => "B-TS", [28,36] => "I-TS" }  }
-		let(:expected) { [["Where", "O"], ["'s", "O"], ["Somebody", "O"], ["?", "O"], ["(", "O"], ["Wednesday", "B-TS"], ["Afternoon", "I-TS"], [")", "O"]]}
+		describe 'test domain' do
+			let(:string) { "Where's Somebody? (Wednesday Afternoon)"  }
+			let(:tags) { {[19, 27] => "B-TS", [28,36] => "I-TS" }  }
+			let(:expected) { [["Where", "O"], ["'s", "O"], ["Somebody", "O"], ["?", "O"], ["(", "O"], ["Wednesday", "B-TS"], ["Afternoon", "I-TS"], [")", "O"]]}
 
-		it "parses tags and adds to training buffer" do
-			Dicot.train(string, tags)
-			Dicot::Trainer.training_buffer.first.should == expected
+			it "parses tags and adds to training buffer" do
+				Dicot.train(string, tags)
+				Dicot::Trainer.training_buffer.last.should == expected
+			end
+		end
+
+		describe 'arbitrary domain' do
+			let(:string) { "yes no yes" }
+			let(:tags) { { [0,2] => "B-arb", [7,9] => "B-arb" } }
+			let(:expected) { [["yes", "B-arb"],["no","O"],["yes","B-arb"]] }
+
+			before(:all) do
+				@original_training_text = IO.read('model/train.txt')
+			end
+
+			after(:all) do
+				open('model/train.txt','w'){|f| f.write @original_training_text}
+			end
+
+			it "adds to training buffer" do 
+				Dicot.train(string, tags)
+				Dicot::Trainer.training_buffer.last.should == expected
+			end
+			
+			it "retrains using new data" do
+				Dicot::Trainer.retrain
+				Dicot.label(string).first.should == expected
+			end
 		end
 	end
 end
