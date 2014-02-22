@@ -17,11 +17,11 @@ describe Dicot do
   end
 
   context "retraining" do
-    before(:each) do
+    before do
       @original_training_text = IO.read('model/train.txt')
     end
 
-    after(:each) do
+    after do
       open('model/train.txt','w'){|f| f.write @original_training_text}
     end
 
