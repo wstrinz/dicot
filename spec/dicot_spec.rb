@@ -56,4 +56,15 @@ describe Dicot do
       Dicot.label("anything should be O").first.map(&:last).should == %w{O O O O}
 		end
 	end
+
+	describe 'training input' do
+		let(:string) { "Where's Somebody? (Wednesday Afternoon)"  }
+		let(:tags) { {[18, 27] => "B-TS", [28,36] => "I-TS" }  }
+		let(:expected) { [["Where", "O"], ["'s", "O"], ["Somebody", "O"], ["?", "O"], ["(", "O"], ["Wednesday", "B-TS"], ["Afternoon", "I-TS"], [")", "O"]]}
+
+		it "parses tags and adds to training buffer" do
+			Dicot.train(string, tags)
+			Dicot::Trainer.training_buffer.first.should == expected
+		end
+	end
 end
