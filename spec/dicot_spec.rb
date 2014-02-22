@@ -46,4 +46,14 @@ describe Dicot do
       Dicot.label(str1).first.map(&:last).should == %w{O O O O B-TS I-TS O}
     end
   end
+
+	describe "generates dummy model if none exists" do
+    before { @original_model = IO.read('model/model.mod') }
+    after { open('model/model.mod','w'){|f| f.write @original_model} }
+
+		it do
+			File.delete 'model/model.mod' if File.exist? 'model/model.mod'			
+      Dicot.label("anything should be O").first.map(&:last).should == %w{O O O O}
+		end
+	end
 end

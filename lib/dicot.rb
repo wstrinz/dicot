@@ -18,6 +18,11 @@ class Dicot
   class Trainer
     class << self
       def model
+				unless File.exist? 'model/model.mod'
+					Wapiti::Model.train([['zsdxye O','ZxFDSG I', 'd O']], pattern: 'model/pattern.txt').compact.save('model/model.mod')
+					#require 'pry'; binding.pry
+				end
+
         @model ||= Wapiti.load('model/model.mod')
       end
 

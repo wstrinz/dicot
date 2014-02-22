@@ -1,2 +1,3 @@
-model/*
+model/model.mod
+model/train/*
 *.swp
