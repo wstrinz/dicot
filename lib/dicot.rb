@@ -6,10 +6,25 @@ require_relative 'trainer'
 
 class Dicot
   class << self
-    def label(string)
+    def raw_label(string)
       tokens = Tokenizer.tokenize(string)
       labels = Trainer.label([tokens])
       labels
+    end
+
+    def label(string)
+      labels = raw_label(string).first.each_with_object([]) do |raw, arr|
+        case raw.last[0]
+        when "B"
+          arr << [raw.first, raw.last[2..-1]]
+        when "I"
+          arr.last[0] += " #{raw.first}"
+        when "O"
+        else
+          raise "Invalid BIO encoding for #{raw}"
+        end
+      end
+      Hash[labels]
     end
 
     def train(string, tags)
@@ -24,7 +39,6 @@ class Dicot
 
         char_pos += token.size
         char_pos += 1 if string[char_pos] == " "
-        #require 'pry'; binding.pry
       end
 
       Trainer.add_training_seq(data)
