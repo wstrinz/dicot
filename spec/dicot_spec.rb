@@ -11,8 +11,10 @@ describe Dicot do
   end
 
   after(:all) do
-    FileUtils.copy 'model/train.txt.bak', 'model/train.txt'
-    FileUtils.rm 'model/train.txt.bak'
+    if File.exist? 'model/train.txt.bak'
+      FileUtils.copy 'model/train.txt.bak', 'model/train.txt'
+      FileUtils.rm 'model/train.txt.bak'
+    end
   end
 
   it "should label a string" do
