@@ -30,7 +30,7 @@ class Dicot
     def train(string, tags)
       char_pos = 0
       data = Tokenizer.tokenize(string).each_with_object([]) do |token, arr|
-        loc = tags.keys.find{|loc| char_pos.between?(loc[0], loc[1])}
+        loc = tags.keys.find{|l| char_pos.between?(l[0], l[1])}
         if loc
           arr << [token, tags[loc]]
         else
@@ -42,6 +42,10 @@ class Dicot
       end
 
       Trainer.add_training_seq(data)
+    end
+
+    def retrain
+      Dicot::Trainer.retrain
     end
   end
 end

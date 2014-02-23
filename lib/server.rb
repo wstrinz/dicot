@@ -1,12 +1,44 @@
 require 'sinatra'
+require 'json'
 require_relative 'dicot'
 
 helpers do
   def label(string)
     Dicot.label(string)
   end
+
+  def retrain
+    Dicot.retrain
+  end
+
+  def add_sequence(data)
+    tags = data["tags"].each_with_object({}) do |tag, h|
+      h[ [tag["start"], tag["end"]] ] = tag["tag"]
+    end
+
+    Dicot.train(data["string"], tags)
+  end
+end
+
+get '/' do
+  "Web interface goes here"
 end
 
 get '/label' do
   label(params[:message])
+end
+
+get '/retrain' do
+  retrain
+  "Retrain successful"
+end
+
+get '/add_sequence' do
+  add_sequence JSON.parse(params[:data])
+  "sequence added"
+end
+
+post '/add_sequence' do
+  add_sequence JSON.parse(params[:data])
+  "sequence added"
 end

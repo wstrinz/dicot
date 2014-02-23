@@ -41,7 +41,7 @@ describe Dicot do
 
       Dicot.raw_label(str).first.map(&:last).should == untrained
       Dicot::Trainer.training_buffer << Dicot::Tokenizer.tokenize(str).zip(trained)
-      Dicot::Trainer.retrain
+      Dicot.retrain
 
       Dicot.raw_label(str).first.map(&:last).should == trained
     end
@@ -52,7 +52,7 @@ describe Dicot do
       trained = %w{O O O O O O B-TS I-TS O}
 
       Dicot::Trainer.training_buffer << Dicot::Tokenizer.tokenize(str2).zip(trained)
-      Dicot::Trainer.retrain
+      Dicot.retrain
       Dicot.raw_label(str1).first.map(&:last).should == %w{O O O O B-TS I-TS O}
     end
   end

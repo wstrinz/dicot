@@ -24,7 +24,7 @@ class Dicot
       def retrain(training_file=:none)
         if training_file == :none
           if training_buffer.size > 0
-            open(TRAINING_PATH,'a') do |f|
+            open(TRAINING_PATH, 'a') do |f|
               f.write "\n"
               training_buffer.each do |ent|
                 ent.each do |d|
