@@ -3,6 +3,16 @@ require_relative 'spec_helper.rb'
 describe Dicot do
   before(:all) do
     Dicot::Trainer.retrain('spec/fixtures/train.txt')
+    if File.exist? 'model/train.txt'
+      FileUtils.copy 'model/train.txt', 'model/train.txt.bak'
+    end
+
+    FileUtils.copy 'spec/fixtures/train.txt', 'model/train.txt'
+  end
+
+  after(:all) do
+    FileUtils.copy 'model/train.txt.bak', 'model/train.txt'
+    FileUtils.rm 'model/train.txt.bak'
   end
 
   it "should label a string" do
@@ -49,11 +59,11 @@ describe Dicot do
     it "still correctly labels known strings" do
       str1 = "Where's Will (Friday morning)"
       str2 = "Where's Will (on the Ragnarok morning)"
-      trained = %w{O O O O O O B-TS I-TS O}
+      trained = %w{O O B-Name O O O B-TS I-TS O}
 
       Dicot::Trainer.training_buffer << Dicot::Tokenizer.tokenize(str2).zip(trained)
       Dicot.retrain
-      Dicot.raw_label(str1).first.map(&:last).should == %w{O O O O B-TS I-TS O}
+      Dicot.raw_label(str1).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
     end
   end
 
