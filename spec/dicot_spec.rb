@@ -1,24 +1,28 @@
 require_relative 'spec_helper.rb'
 
 describe Dicot do
+  before(:all) do
+    Dicot::Trainer.retrain('spec/fixtures/train.txt')
+  end
+
   it "should label a string" do
     Dicot.raw_label("Hello I am a string").should_not be nil
   end
 
   it "correctly labels trained string" do
     str = "Where's Will (Friday morning)"
-    Dicot.raw_label(str).first.map(&:last).should == %w{O O O O B-TS I-TS O}
+    Dicot.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
   end
 
 
   it 'identifies features in novel string' do
     str = "Where's Will (Ragnarok morning)"
-    Dicot.raw_label(str).first.map(&:last).should == %w{O O O O B-TS I-TS O}
+    Dicot.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
   end
 
   it 'recognizes and extracts labels' do
     str = "Where's Will (Friday morning)"
-    Dicot.label(str).should == { "Friday morning" => "TS" }
+    Dicot.label(str).should == { "Will" => "Name", "Friday morning" => "TS" }
   end
 
   context "retraining" do
@@ -36,8 +40,8 @@ describe Dicot do
       trained = %w{O O O O O O B-thing I-thing O}
 
       Dicot.raw_label(str).first.map(&:last).should == untrained
-
-      Dicot::Trainer.retrain(Dicot::Tokenizer.tokenize(str).zip(trained))
+      Dicot::Trainer.training_buffer << Dicot::Tokenizer.tokenize(str).zip(trained)
+      Dicot::Trainer.retrain
 
       Dicot.raw_label(str).first.map(&:last).should == trained
     end
@@ -47,7 +51,8 @@ describe Dicot do
       str2 = "Where's Will (on the Ragnarok morning)"
       trained = %w{O O O O O O B-TS I-TS O}
 
-      Dicot::Trainer.retrain(Dicot::Tokenizer.tokenize(str2).zip(trained))
+      Dicot::Trainer.training_buffer << Dicot::Tokenizer.tokenize(str2).zip(trained)
+      Dicot::Trainer.retrain
       Dicot.raw_label(str1).first.map(&:last).should == %w{O O O O B-TS I-TS O}
     end
   end

@@ -23,30 +23,26 @@ class Dicot
         model.label(data)
       end
 
-      def retrain(data=:none)
-        unless data == :none
-          open(TRAINING_PATH,'a') do |f|
-            f.write "\n"
-            data.each do |d|
-              f.write d.join(" ") + "\n"
-            end
-          end
-        end
-        if training_buffer.size > 0
-          open(TRAINING_PATH,'a') do |f|
-            f.write "\n"
-            training_buffer.each do |ent|
-              ent.each do |d|
-                f.write d.join(" ") + "\n"
-              end
+      def retrain(training_file=:none)
+        if training_file == :none
+          if training_buffer.size > 0
+            open(TRAINING_PATH,'a') do |f|
               f.write "\n"
+              training_buffer.each do |ent|
+                ent.each do |d|
+                  f.write d.join(" ") + "\n"
+                end
+                f.write "\n"
+              end
+              training_buffer.clear
             end
           end
 
-          training_buffer.clear
+          @model = Wapiti::Model.train(TRAINING_PATH, pattern: PATTERN_PATH)
+        else
+          @model = Wapiti::Model.train(training_file, pattern: PATTERN_PATH)
         end
 
-        @model = Wapiti::Model.train(TRAINING_PATH, pattern: PATTERN_PATH)
         model
       end
 
