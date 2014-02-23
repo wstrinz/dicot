@@ -1,16 +1,22 @@
 class Dicot
   class Trainer
+    MODEL_PATH = 'model/model.mod'
+    TRAINING_PATH = 'model/train.txt'
+    PATTERN_PATH = 'model/pattern.txt'
+
     class << self
       def model
-        unless File.exist? 'model/model.mod'
-          Wapiti::Model.train([['zz O','zz B']], pattern: 'model/pattern.txt').compact.save('model/model.mod')
+        if File.exist? MODEL_PATH
+          @model ||= Wapiti.load(MODEL_PATH)
+        else
+          Wapiti::Model.train([['zz O']], pattern: PATTERN_PATH).save(MODEL_PATH)
+          @model = Wapiti.load(MODEL_PATH)
         end
 
-        @model ||= Wapiti.load('model/model.mod')
       end
 
       def save
-        model.compact.save
+        model.compact.save(MODEL_PATH)
       end
 
       def label(data)
@@ -19,7 +25,7 @@ class Dicot
 
       def retrain(data=:none)
         unless data == :none
-          open('model/train.txt','a') do |f|
+          open(TRAINING_PATH,'a') do |f|
             f.write "\n"
             data.each do |d|
               f.write d.join(" ") + "\n"
@@ -27,20 +33,20 @@ class Dicot
           end
         end
         if training_buffer.size > 0
-          open('model/train.txt','a') do |f|
+          open(TRAINING_PATH,'a') do |f|
             f.write "\n"
             training_buffer.each do |ent|
               ent.each do |d|
                 f.write d.join(" ") + "\n"
               end
-              f.write "\n"	
+              f.write "\n"
             end
           end
 
           training_buffer.clear
         end
 
-        @model = Wapiti::Model.train('model/train.txt', pattern: 'model/pattern.txt')
+        @model = Wapiti::Model.train(TRAINING_PATH, pattern: PATTERN_PATH)
         model
       end
 

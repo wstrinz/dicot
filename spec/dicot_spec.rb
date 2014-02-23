@@ -31,9 +31,9 @@ describe Dicot do
     end
 
     it "can be retrained" do
-      str = "Where's Will (on the Ragnarok morning)"
+      str = "Bla Bla mostly arbitray text I wrote right here"
       untrained = %w{O O O O O O O O O}
-      trained = %w{O O O O O O B-TS I-TS O}
+      trained = %w{O O O O O O B-thing I-thing O}
 
       Dicot.raw_label(str).first.map(&:last).should == untrained
 
@@ -57,7 +57,7 @@ describe Dicot do
     after { open('model/model.mod','w'){|f| f.write @original_model} }
 
     it do
-      File.delete 'model/model.mod' if File.exist? 'model/model.mod'			
+      File.delete 'model/model.mod'
       Dicot.raw_label("anything should be O").first.map(&:last).should == %w{O O O O}
     end
   end
