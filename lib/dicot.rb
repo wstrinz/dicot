@@ -29,12 +29,20 @@ class Dicot
 
     def train(string, tags)
       char_pos = 0
+      in_label = false
+
       data = Tokenizer.tokenize(string).each_with_object([]) do |token, arr|
         loc = tags.keys.find{|l| char_pos.between?(l[0], l[1])}
         if loc
-          arr << [token, tags[loc]]
+          if in_label
+            arr << [token, "I-#{tags[loc]}"]
+          else
+            arr << [token, "B-#{tags[loc]}"]
+          end
+          in_label = true
         else
           arr << [token, "O"]
+          in_label = false
         end
 
         char_pos += token.size

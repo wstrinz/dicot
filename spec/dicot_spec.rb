@@ -82,7 +82,7 @@ describe Dicot do
   describe 'training input' do
     describe 'test domain' do
       let(:string) { "Where's Somebody? (Wednesday Afternoon)"  }
-      let(:tags) { {[19, 27] => "B-TS", [28,36] => "I-TS" }  }
+      let(:tags) { { [19, 36] => "TS" }  }
       let(:expected) { [["Where", "O"], ["'s", "O"], ["Somebody", "O"], ["?", "O"], ["(", "O"], ["Wednesday", "B-TS"], ["Afternoon", "I-TS"], [")", "O"]]}
 
       it "parses tags and adds to training buffer" do
@@ -93,7 +93,7 @@ describe Dicot do
 
     describe 'arbitrary domain' do
       let(:string) { "yes no yes" }
-      let(:tags) { { [0,2] => "B-arb", [7,9] => "B-arb" } }
+      let(:tags) { { [0,2] => "arb", [7,9] => "arb" } }
       let(:expected) { [["yes", "B-arb"],["no","O"],["yes","B-arb"]] }
 
       before(:all) do
