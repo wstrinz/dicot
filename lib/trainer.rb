@@ -7,7 +7,7 @@ class Dicot
     class << self
       def model
         unless File.exist? MODEL_PATH
-          Wapiti::Model.train([['zz O']], pattern: PATTERN_PATH).save(MODEL_PATH)
+          Wapiti::Model.train([['zz O', 'zz B']], pattern: PATTERN_PATH).save(MODEL_PATH)
         end
 
         @model ||= Wapiti.load(MODEL_PATH)
