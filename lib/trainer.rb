@@ -6,13 +6,11 @@ class Dicot
 
     class << self
       def model
-        if File.exist? MODEL_PATH
-          @model ||= Wapiti.load(MODEL_PATH)
-        else
+        unless File.exist? MODEL_PATH
           Wapiti::Model.train([['zz O']], pattern: PATTERN_PATH).save(MODEL_PATH)
-          @model = Wapiti.load(MODEL_PATH)
         end
 
+        @model ||= Wapiti.load(MODEL_PATH)
       end
 
       def save

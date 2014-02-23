@@ -92,7 +92,7 @@ describe Dicot do
         open('model/train.txt','w'){|f| f.write @original_training_text}
       end
 
-      it "adds to training buffer" do 
+      it "adds to training buffer" do
         Dicot.train(string, tags)
         Dicot::Trainer.training_buffer.last.should == expected
       end
