@@ -29,7 +29,11 @@ describe Dicot do
   describe ".label" do
     it 'recognizes and extracts labels' do
       str = "Where's Will (Friday morning)"
-      Dicot.label(str).should == { "Will" => "Name", "Friday morning" => "TS" }
+      Dicot.label(str).should ==
+      [
+        {string: "Will", tag: "Name", start: 8, end: 11},
+        {string: "Friday morning", tag: "TS", start: 14, end: 27 }
+      ]
     end
 
     describe "handling spaces" do
@@ -48,7 +52,7 @@ describe Dicot do
       end
 
       it 'handles tokens properly' do
-        Dicot.label(@str).should == { "token's?" => "test" }
+        Dicot.label(@str).should == { string: "token's?", tag: "test", start: 6, end: 13 }
       end
     end
   end
