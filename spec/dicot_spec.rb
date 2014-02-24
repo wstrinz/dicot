@@ -31,6 +31,26 @@ describe Dicot do
       str = "Where's Will (Friday morning)"
       Dicot.label(str).should == { "Will" => "Name", "Friday morning" => "TS" }
     end
+
+    describe "handling spaces" do
+      before do
+        save_training_text
+        @str = "Weird token's?"
+        @train = %w{O B-test I-test I-test}
+        Dicot::Trainer.training_buffer << Dicot::Tokenizer.tokenize(@str).zip(@train)
+        Dicot::Trainer.retrain
+      end
+
+      after do
+        restore_training_text
+        Dicot::Trainer.retrain
+        restore_training_text
+      end
+
+      it 'handles tokens properly' do
+        Dicot.label(@str).should == { "token's?" => "test" }
+      end
+    end
   end
 
   context "retraining" do
@@ -108,6 +128,10 @@ describe Dicot do
       it "retrains using new data" do
         Dicot::Trainer.retrain
         Dicot.raw_label(string).first.should == expected
+      end
+
+      it "labels using new data" do
+        Dicot.label(string).should == {"yes" => "arb"}
       end
     end
   end
