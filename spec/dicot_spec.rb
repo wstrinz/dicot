@@ -2,19 +2,11 @@ require_relative 'spec_helper.rb'
 
 describe Dicot do
   before(:all) do
-    Dicot::Trainer.retrain('spec/fixtures/train.txt')
-    if File.exist? 'model/train.txt'
-      FileUtils.copy 'model/train.txt', 'model/train.txt.bak'
-    end
-
-    FileUtils.copy 'spec/fixtures/train.txt', 'model/train.txt'
+    train_on_fixtures
   end
 
   after(:all) do
-    if File.exist? 'model/train.txt.bak'
-      FileUtils.copy 'model/train.txt.bak', 'model/train.txt'
-      FileUtils.rm 'model/train.txt.bak'
-    end
+    remove_fixtures
   end
 
   describe ".raw_label" do
@@ -43,11 +35,11 @@ describe Dicot do
 
   context "retraining" do
     before do
-      @original_training_text = IO.read('model/train.txt')
+      save_training_text
     end
 
     after do
-      open('model/train.txt','w'){|f| f.write @original_training_text}
+      restore_training_text
     end
 
     it "can be retrained" do
@@ -74,8 +66,8 @@ describe Dicot do
   end
 
   describe "generates dummy model if none exists" do
-    before { @original_model = IO.read('model/model.mod') }
-    after { open('model/model.mod','w'){|f| f.write @original_model} }
+    before { save_model }
+    after { restore_model }
 
     it do
       File.delete 'model/model.mod'
