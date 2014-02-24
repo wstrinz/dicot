@@ -17,24 +17,28 @@ describe Dicot do
     end
   end
 
-  it "should label a string" do
-    Dicot.raw_label("Hello I am a string").should_not be nil
+  describe ".raw_label" do
+    it "should label a string" do
+      Dicot.raw_label("Hello I am a string").should_not be nil
+    end
+
+    it "correctly labels trained string" do
+      str = "Where's Will (Friday morning)"
+      Dicot.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
+    end
+
+
+    it 'identifies features in novel string' do
+      str = "Where's Will (Ragnarok morning)"
+      Dicot.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
+    end
   end
 
-  it "correctly labels trained string" do
-    str = "Where's Will (Friday morning)"
-    Dicot.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
-  end
-
-
-  it 'identifies features in novel string' do
-    str = "Where's Will (Ragnarok morning)"
-    Dicot.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
-  end
-
-  it 'recognizes and extracts labels' do
-    str = "Where's Will (Friday morning)"
-    Dicot.label(str).should == { "Will" => "Name", "Friday morning" => "TS" }
+  describe ".label" do
+    it 'recognizes and extracts labels' do
+      str = "Where's Will (Friday morning)"
+      Dicot.label(str).should == { "Will" => "Name", "Friday morning" => "TS" }
+    end
   end
 
   context "retraining" do
