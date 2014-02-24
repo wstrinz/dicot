@@ -52,7 +52,7 @@ describe Dicot do
       end
 
       it 'handles tokens properly' do
-        Dicot.label(@str).should == { string: "token's?", tag: "test", start: 6, end: 13 }
+        Dicot.label(@str).should == [{ string: "token's?", tag: "test", start: 6, end: 13 }]
       end
     end
   end
@@ -135,7 +135,11 @@ describe Dicot do
       end
 
       it "labels using new data" do
-        Dicot.label(string).should == {"yes" => "arb"}
+        Dicot.label(string).should == 
+          [
+            {:string=>"yes", :tag=>"arb", :start=>0, :end=>2},
+            {:string=>"yes", :tag=>"arb", :start=>7, :end=>9}
+        ]
       end
     end
   end

@@ -14,13 +14,19 @@ class Dicot
 
     def label(string)
       char_pos = 0
-      labels = raw_label(string).first.each_with_object([]) do |raw, arr|
+      raw_label(string).first.each_with_object([]) do |raw, arr|
         case raw.last[0]
         when "B"
-          arr << [raw.first, raw.last[2..-1]]
+          arr << {
+            string: raw.first,
+            tag: raw.last[2..-1],
+            start: char_pos,
+            end: char_pos + raw.first.size - 1
+          }
         when "I"
-          arr.last[0] += " " if string[char_pos - 1] == " "
-          arr.last[0] += "#{raw.first}"
+          arr.last[:string] += " " if string[char_pos - 1] == " "
+          arr.last[:string] += "#{raw.first}"
+          arr.last[:end] = char_pos + raw.first.size - 1
         when "O"
         else
           raise "Invalid BIO encoding for #{raw}"
@@ -29,7 +35,6 @@ class Dicot
         char_pos += raw.first.size
         char_pos += 1 if string[char_pos] == " "
       end
-      Hash[labels]
     end
 
     def train(string, tags)

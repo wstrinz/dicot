@@ -20,7 +20,11 @@ describe 'Dicot Server' do
   it "labels input" do
     get '/label?message=Where%27s%20Will%20(Tuesday%20morning)'
 
-    expected = {"Will" => "Name", "Tuesday morning" => "TS"}
+    expected =
+    [
+      {string:"Will", tag: "Name", start: 8, end: 11},
+      {string:"Tuesday morning", tag: "TS", start: 14, end: 28}
+    ]
     expect(last_response.body).to eq expected.to_json
   end
 end
