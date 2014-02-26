@@ -1,4 +1,5 @@
 model/model.mod
 model/train.txt
 model/train/*
+!model/train/train.txt
 *.swp
