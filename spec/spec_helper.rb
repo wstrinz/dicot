@@ -9,6 +9,17 @@ def train_on_fixtures
   FileUtils.copy 'spec/fixtures/train.txt', 'model/train.txt'
 end
 
+def enumerate_training_files
+  @existing_training_files = Dir["model/train/**"]
+end
+
+def remove_generated_training_files
+  extra_files = Dir["model/train/**"] - @existing_training_files
+  extra_files.each do |f|
+    FileUtils.rm f
+  end
+end
+
 def remove_fixtures
   if File.exist? 'model/train.txt.bak'
     FileUtils.copy 'model/train.txt.bak', 'model/train.txt'

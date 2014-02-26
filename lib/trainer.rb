@@ -2,6 +2,7 @@ class Dicot
   class Trainer
     MODEL_PATH = 'model/model.mod'
     TRAINING_PATH = 'model/train.txt'
+    TRAINING_BASE = 'model/train'
     PATTERN_PATH = 'model/pattern.txt'
 
     class << self
@@ -21,20 +22,34 @@ class Dicot
         model.label(data)
       end
 
+      def dump_buffer
+        file_name = "#{Time.now.to_i}_train.txt"
+        open(File.join(TRAINING_BASE, file_name), 'w') do |f|
+          training_buffer.each do |ent|
+            ent.each do |d|
+              f.write d.join(" ") + "\n"
+            end
+            f.write "\n"
+          end
+          training_buffer.clear
+        end
+      end
+
+      def aggregate_training_files
+        open(TRAINING_PATH, 'w') do |overall_file|
+          Dir[TRAINING_BASE + '/**'].each do |f|
+            overall_file.write(IO.read f)
+          end
+        end
+      end
+
       def retrain(training_file=:none)
         if training_file == :none
           if training_buffer.size > 0
-            open(TRAINING_PATH, 'a') do |f|
-              f.write "\n"
-              training_buffer.each do |ent|
-                ent.each do |d|
-                  f.write d.join(" ") + "\n"
-                end
-                f.write "\n"
-              end
-              training_buffer.clear
-            end
+            dump_buffer
           end
+
+          aggregate_training_files
 
           @model = Wapiti::Model.train(TRAINING_PATH, pattern: PATTERN_PATH)
         else

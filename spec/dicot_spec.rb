@@ -3,10 +3,12 @@ require_relative 'spec_helper.rb'
 describe Dicot do
   before(:all) do
     train_on_fixtures
+    enumerate_training_files
   end
 
   after(:all) do
     remove_fixtures
+    remove_generated_training_files
   end
 
   describe ".raw_label" do
