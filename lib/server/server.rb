@@ -27,7 +27,12 @@ end
 
 get '/label' do
   content_type :json
-  label(params[:message]).to_json
+  label(params[:data]).to_json
+end
+
+post '/label' do
+  content_type :json
+  label(params[:data]).to_json
 end
 
 get '/retrain' do

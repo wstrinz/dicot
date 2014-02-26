@@ -36,6 +36,11 @@ describe Dicot do
       ]
     end
 
+    it "gracefully handles things it doesn't understand" do
+      str = "Test Input"
+      Dicot.label(str).should == []
+    end
+
     describe 'feedback queue' do
       it 'adds all labeled strings by default' do
         str = "Where's Will (Friday morning)"

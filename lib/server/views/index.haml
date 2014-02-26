@@ -1,4 +1,13 @@
-%h1 Dicot Web Interface
+%head
+  %script{src: 'jquery.js', type: 'text/javascript'}
+  %script{src: "index.js", type: "text/javascript"}
 
-%textarea{id: 'label_input'} Test Input
-%button{onClick: 'label()'} Label
+%body
+  %h1 Dicot Web Interface
+
+  %textarea{id: 'label_input'} Test Input
+  %button{onClick: 'label()'} Label
+  %br
+  %br
+  #label_output
+
