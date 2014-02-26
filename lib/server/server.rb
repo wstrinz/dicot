@@ -1,6 +1,6 @@
 require 'sinatra'
 require 'json'
-require_relative 'dicot'
+require_relative '../dicot'
 
 helpers do
   def label(string)
@@ -12,6 +12,7 @@ helpers do
   end
 
   def add_sequence(data)
+    data = Array(data)
     tags = data["tags"].each_with_object({}) do |tag, h|
       h[ [tag["start"], tag["end"]] ] = tag["tag"]
     end
@@ -32,6 +33,10 @@ end
 get '/retrain' do
   retrain
   "Retrain successful"
+end
+
+get '/train' do
+  haml :train
 end
 
 get '/add_sequence' do

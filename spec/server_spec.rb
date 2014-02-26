@@ -1,20 +1,15 @@
 ENV['RACK_ENV'] = 'test'
 
-require_relative 'spec_helper'  # <-- your sinatra app
-require_relative '../lib/server.rb'  # <-- your sinatra app
 require 'rspec'
 require 'rack/test'
+require_relative 'spec_helper'
+require_relative '../lib/server/server.rb'
 
 describe 'Dicot Server' do
   include Rack::Test::Methods
 
   def app
     Sinatra::Application
-  end
-
-  it "runs" do
-    get '/'
-    expect(last_response).to be_ok
   end
 
   it "labels input" do
@@ -26,5 +21,10 @@ describe 'Dicot Server' do
       {string:"Tuesday morning", tag: "TS", start: 14, end: 28}
     ]
     expect(last_response.body).to eq expected.to_json
+  end
+
+  it "has training interface" do
+    get '/train'
+    expect(last_response).to be_ok
   end
 end

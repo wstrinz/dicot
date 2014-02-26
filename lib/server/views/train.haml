@@ -1,0 +1,23 @@
+%head
+  %script{src: 'jquery.js', type: 'text/javascript'}
+  %script{src: 'train.js', type: 'text/javascript'}
+%body
+  %h1 Train
+
+  %textarea{id: 'training_input', cols: 60, rows: 4} Where's Somebody (Friday Morning)
+  %br
+  #selected
+    Selected:
+  %br
+  %br
+  %textarea{id: 'training_label', cols: 60} Label
+  %button{id: 'submit_training', onClick: "addTraining()"} Add
+
+  %br
+  %br
+  %button{id: 'submit', onClick: 'submitTraining()'} Submit
+  %br
+  %br
+  #output
+    Labels:
+    %br
