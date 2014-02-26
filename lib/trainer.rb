@@ -48,6 +48,10 @@ class Dicot
         @training_buffer ||= []
       end
 
+      def feedback_queue
+        @feedback_queue ||= []
+      end
+
       def add_training_seq(data)
         training_buffer << data
       end

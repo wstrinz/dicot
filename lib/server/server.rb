@@ -22,7 +22,7 @@ helpers do
 end
 
 get '/' do
-  "Web interface goes here"
+  haml :index
 end
 
 get '/label' do
