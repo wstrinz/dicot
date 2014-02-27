@@ -40,4 +40,24 @@ describe 'Dicot Server' do
     get '/train'
     expect(last_response).to be_ok
   end
+
+  describe "classify" do
+    before(:all) do
+      @string = "Where's Will? (Friday Morning)"
+      klass = "Out of office"
+
+      Dicot::Classify.train(@string, klass)
+      @expected = { string: @string, class: klass }
+    end
+
+    it "get" do
+      get "/classify?data=#{URI.escape(@string)}"
+      expect(last_response.body).to eq @expected.to_json
+    end
+
+    it "post" do
+      post "/classify", data: @string
+      expect(last_response.body).to eq @expected.to_json
+    end
+  end
 end

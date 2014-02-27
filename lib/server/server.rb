@@ -7,6 +7,10 @@ helpers do
     Dicot.label(string)
   end
 
+  def classify(string)
+    {string: string, class: Dicot.classify(string)}
+  end
+
   def retrain
     Dicot.retrain
   end
@@ -33,6 +37,16 @@ end
 post '/label' do
   content_type :json
   label(params[:data]).to_json
+end
+
+get '/classify' do
+  content_type :json
+  classify(params[:data]).to_json
+end
+
+post '/classify' do
+  content_type :json
+  classify(params[:data]).to_json
 end
 
 get '/retrain' do

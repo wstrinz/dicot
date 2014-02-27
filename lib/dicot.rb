@@ -13,6 +13,10 @@ class Dicot
       Features.label(string, add_to_feedback)
     end
 
+    def classify(string)
+      Classify.classify(string)
+    end
+
     def train(string, tags)
       Trainer.train(string, tags)
     end
