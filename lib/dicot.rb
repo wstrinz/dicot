@@ -1,9 +1,11 @@
 require 'wapiti'
+require 'classifier'
 require 'treat'
 
 require_relative 'tokenizer'
 require_relative 'trainer'
 require_relative 'features'
+require_relative 'classify'
 
 class Dicot
   class << self
