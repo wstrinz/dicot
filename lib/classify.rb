@@ -10,7 +10,12 @@ class Dicot
       end
 
       def classify(string)
-        model.classify(string)
+        begin
+          model.classify(string)
+        rescue
+          puts "W: Classification error" unless Dicot.surpress_warnings?
+          "{error}"
+        end
       end
 
       def items
