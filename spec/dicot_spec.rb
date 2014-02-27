@@ -13,18 +13,18 @@ describe Dicot do
 
   describe ".raw_label" do
     it "should label a string" do
-      Dicot.raw_label("Hello I am a string").should_not be nil
+      Dicot::Features.raw_label("Hello I am a string").should_not be nil
     end
 
     it "correctly labels trained string" do
       str = "Where's Will (Friday morning)"
-      Dicot.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
+      Dicot::Features.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
     end
 
 
     it 'identifies features in novel string' do
       str = "Where's Will (Ragnarok morning)"
-      Dicot.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
+      Dicot::Features.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
     end
   end
 
@@ -94,11 +94,11 @@ describe Dicot do
       untrained = %w{O O O O O O O O O}
       trained = %w{O O O O O O B-thing I-thing O}
 
-      Dicot.raw_label(str).first.map(&:last).should == untrained
+      Dicot::Features.raw_label(str).first.map(&:last).should == untrained
       Dicot::Trainer.training_buffer << Dicot::Tokenizer.tokenize(str).zip(trained)
       Dicot.retrain
 
-      Dicot.raw_label(str).first.map(&:last).should == trained
+      Dicot::Features.raw_label(str).first.map(&:last).should == trained
     end
 
     it "still correctly labels known strings" do
@@ -108,7 +108,7 @@ describe Dicot do
 
       Dicot::Trainer.training_buffer << Dicot::Tokenizer.tokenize(str2).zip(trained)
       Dicot.retrain
-      Dicot.raw_label(str1).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
+      Dicot::Features.raw_label(str1).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
     end
   end
 
@@ -118,7 +118,7 @@ describe Dicot do
 
     it do
       File.delete 'model/model.mod'
-      Dicot.raw_label("anything should be O").first.map(&:last).should == %w{O O O O}
+      Dicot::Features.raw_label("anything should be O").first.map(&:last).should == %w{O O O O}
     end
   end
 
@@ -154,7 +154,7 @@ describe Dicot do
 
       it "retrains using new data" do
         Dicot::Trainer.retrain
-        Dicot.raw_label(string).first.should == expected
+        Dicot::Features.raw_label(string).first.should == expected
       end
 
       it "labels using new data" do

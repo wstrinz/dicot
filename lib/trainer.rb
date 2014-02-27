@@ -35,6 +35,31 @@ class Dicot
         end
       end
 
+      def train(string, tags)
+        char_pos = 0
+        in_label = false
+
+        data = Tokenizer.tokenize(string).each_with_object([]) do |token, arr|
+          loc = tags.keys.find{|l| char_pos.between?(l[0], l[1])}
+          if loc
+            if in_label
+              arr << [token, "I-#{tags[loc]}"]
+            else
+              arr << [token, "B-#{tags[loc]}"]
+            end
+            in_label = true
+          else
+            arr << [token, "O"]
+            in_label = false
+          end
+
+          char_pos += token.size
+          char_pos += 1 if string[char_pos] == " "
+        end
+
+        add_training_seq(data)
+      end
+
       def aggregate_training_files
         open(TRAINING_PATH, 'w') do |overall_file|
           Dir[TRAINING_BASE + '/**'].each do |f|
