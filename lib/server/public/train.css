@@ -11,9 +11,11 @@
 
 .submit-training {
   float: right;
+  padding-top: 1em;
 }
 
 #selected {
+  padding-top: .5em;
   padding-bottom: 2.5em;
 }
 
@@ -31,16 +33,16 @@
   padding-left: 2.5em ;
 }
 
-.feedback-display-string {
+#feedback-display-string {
   padding-bottom: 6em;
 }
 
-.feedback-display-labels-content {
+#feedback-display-labels-content {
   padding-top: .5em;
   padding-left: 1em;
 }
 
-.feedback-count {
+#feedback-count {
   text-align: center ;
   padding-bottom: 2em ;
 }
