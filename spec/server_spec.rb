@@ -84,8 +84,10 @@ describe 'Dicot Server' do
       [")", "O"]
     ]}
 
+    let(:js_tags) {(0..(@feature_tags.size - 1)).to_a.each_with_object({}){|i,tags| tags[i] = @feature_tags[i] }}
+
     it do
-      post "/add_sequence", data: {string: @feature_string, tags: @feature_tags}
+      post "/add_sequence", {string: @feature_string, tags: js_tags}
       expect(Dicot::Trainer.training_buffer.last).to eq expected_training_buffer
     end
   end
