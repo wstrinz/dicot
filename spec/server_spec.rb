@@ -9,7 +9,7 @@ describe 'Dicot Server' do
   include Rack::Test::Methods
 
   def app
-    Sinatra::Application
+    Dicot::Server
   end
 
   describe "labels input" do
