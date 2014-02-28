@@ -8,9 +8,10 @@ class Dicot
     class << self
       def model
         unless File.exist? MODEL_PATH
-          Wapiti::Model.train([['zz O', 'zz B']], pattern: PATTERN_PATH).save(MODEL_PATH)
+          #Wapiti::Model.train([['zz O', 'zz B']], pattern: PATTERN_PATH).save(MODEL_PATH)
+          retrain(TRAINING_BASE + "/default.txt")
+          @model.save(MODEL_PATH)
         end
-
         @model ||= Wapiti.load(MODEL_PATH)
       end
 
@@ -80,8 +81,6 @@ class Dicot
         else
           @model = Wapiti::Model.train(training_file, pattern: PATTERN_PATH)
         end
-
-        model
       end
 
       def training_buffer
