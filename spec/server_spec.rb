@@ -72,4 +72,21 @@ describe 'Dicot Server' do
       expect(last_response.body).to eq [{string: @feature_string, tags: @feature_tags}].to_json
     end
   end
+
+  describe "submit to training queue" do
+    let(:expected_training_buffer) {[
+      ["Where", "O"],
+      ["'s", "O"],
+      ["Will", "B-Name"],
+      ["(", "O"],
+      ["Tuesday", "B-TS"],
+      ["morning", "I-TS"],
+      [")", "O"]
+    ]}
+
+    it do
+      post "/add_sequence", data: {string: @feature_string, tags: @feature_tags}
+      expect(Dicot::Trainer.training_buffer.last).to eq expected_training_buffer
+    end
+  end
 end

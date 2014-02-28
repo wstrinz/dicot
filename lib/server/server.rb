@@ -1,4 +1,5 @@
 require 'sinatra/base'
+require 'haml'
 require 'json'
 require_relative '../dicot'
 
@@ -18,9 +19,8 @@ class Dicot
       end
 
       def add_sequence(data)
-        data = Array(data)
         tags = data["tags"].each_with_object({}) do |tag, h|
-          h[ [tag["start"], tag["end"]] ] = tag["tag"]
+          h[ [tag["start"].to_i, tag["end"].to_i] ] = tag["tag"]
         end
 
         Dicot.train(data["string"], tags)
@@ -64,13 +64,8 @@ class Dicot
       haml :train
     end
 
-    get '/add_sequence' do
-      add_sequence JSON.parse(params[:data])
-      "sequence added"
-    end
-
     post '/add_sequence' do
-      add_sequence JSON.parse(params[:data])
+      add_sequence params[:data]
       "sequence added"
     end
 
