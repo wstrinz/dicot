@@ -1,0 +1,51 @@
+.train-input {
+  float: left ;
+  border: outset ;
+  padding-bottom: .1em;
+  padding: 1em 1em 1em 1em;
+}
+
+.train-label {
+  padding-bottom: 1em;
+}
+
+.submit-training {
+  float: right;
+}
+
+#selected {
+  padding-bottom: 2.5em;
+}
+
+.feedback-display {
+  float: left;
+  border: outset;
+  margin-left: 3em;
+  padding-bottom: 8em;
+  padding-left: 1em;
+  padding-right: 10em;
+}
+
+.feedback-controls {
+  float: left ;
+  padding-left: 2.5em ;
+}
+
+.feedback-display-string {
+  padding-bottom: 6em;
+}
+
+.feedback-display-labels-content {
+  padding-top: .5em;
+  padding-left: 1em;
+}
+
+.feedback-count {
+  text-align: center ;
+  padding-bottom: 2em ;
+}
+
+.content-area {
+  width: 45% ;
+  height: 100%
+}

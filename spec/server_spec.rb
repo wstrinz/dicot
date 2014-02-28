@@ -12,27 +12,29 @@ describe 'Dicot Server' do
     Dicot::Server
   end
 
+  before(:all) do
+    @feature_string = "Where's Will (Tuesday morning)"
+    @feature_tags =
+      [
+        {string:"Will", tag: "Name", start: 8, end: 11},
+        {string:"Tuesday morning", tag: "TS", start: 14, end: 28}
+      ]
+
+    @classify_string = "Where's Will? (Friday Morning)"
+    @classify_expect = "Out of office"
+  end
+
   describe "labels input" do
     it "get" do
       get '/label?data=Where%27s%20Will%20(Tuesday%20morning)'
 
-      expected =
-      [
-        {string:"Will", tag: "Name", start: 8, end: 11},
-        {string:"Tuesday morning", tag: "TS", start: 14, end: 28}
-      ]
-      expect(last_response.body).to eq expected.to_json
+      expect(last_response.body).to eq @feature_tags.to_json
     end
 
     it "post" do
-      post '/label', data: "Where's Will (Tuesday morning)"
+      post '/label', data: @feature_string
 
-      expected =
-      [
-        {string:"Will", tag: "Name", start: 8, end: 11},
-        {string:"Tuesday morning", tag: "TS", start: 14, end: 28}
-      ]
-      expect(last_response.body).to eq expected.to_json
+      expect(last_response.body).to eq @feature_tags.to_json
     end
   end
 
@@ -42,22 +44,32 @@ describe 'Dicot Server' do
   end
 
   describe "classify" do
-    before(:all) do
-      @string = "Where's Will? (Friday Morning)"
-      klass = "Out of office"
+    let(:expected) {{ string: @classify_string, class: @classify_expect}}
 
-      Dicot::Classify.train(@string, klass)
-      @expected = { string: @string, class: klass }
+    before(:all) do
+      Dicot::Classify.train(@classify_string, @classify_expect)
     end
 
     it "get" do
-      get "/classify?data=#{URI.escape(@string)}"
-      expect(last_response.body).to eq @expected.to_json
+      get "/classify?data=#{URI.escape(@classify_string)}"
+      expect(last_response.body).to eq expected.to_json
     end
 
     it "post" do
-      post "/classify", data: @string
-      expect(last_response.body).to eq @expected.to_json
+      post "/classify", data: @classify_string
+      expect(last_response.body).to eq expected.to_json
+    end
+  end
+
+  describe "feedback queue" do
+    before do
+      Dicot::Trainer.feedback_queue.clear
+      Dicot.label(@feature_string)
+    end
+
+    it do
+      get "/feedback_queue"
+      expect(last_response.body).to eq [{string: @feature_string, tags: @feature_tags}]
     end
   end
 end
