@@ -7,6 +7,10 @@ describe Dicot::Classify do
   let(:data3) {["Remind me to do a thing", "remind"]}
 
   describe ".train" do
+    before do
+      Dicot::Classify.reset!
+    end
+
     it do
       Dicot::Classify.train(*data)
       Dicot::Classify.train(*data2)
@@ -17,6 +21,7 @@ describe Dicot::Classify do
 
   describe ".classify" do
     before do
+      Dicot::Classify.reset!
       Dicot::Classify.train(*data)
       Dicot::Classify.train(*data2)
       Dicot::Classify.train(*data3)

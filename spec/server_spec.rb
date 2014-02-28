@@ -21,20 +21,27 @@ describe 'Dicot Server' do
       ]
 
     @classify_string = "Where's Will? (Friday Morning)"
-    @classify_expect = "Out of office"
+    @classify_expect = "Out of Office"
+
+    @label_output =
+    {
+      string: @feature_string,
+      tags: @feature_tags,
+      class: @classify_expect
+    }
   end
 
   describe "labels input" do
     it "get" do
       get '/label?data=Where%27s%20Will%20(Tuesday%20morning)'
 
-      expect(last_response.body).to eq @feature_tags.to_json
+      expect(last_response.body).to eq @label_output.to_json
     end
 
     it "post" do
       post '/label', data: @feature_string
 
-      expect(last_response.body).to eq @feature_tags.to_json
+      expect(last_response.body).to eq @label_output.to_json
     end
   end
 
@@ -75,7 +82,7 @@ describe 'Dicot Server' do
 
     it "get" do
       get "/feedback_queue"
-      expect(last_response.body).to eq [{string: @feature_string, tags: @feature_tags}].to_json
+      expect(last_response.body).to eq [@label_output].to_json
     end
 
     it "update" do

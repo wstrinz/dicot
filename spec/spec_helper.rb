@@ -6,6 +6,7 @@ RSpec.configure do |config|
   config.before(:all) do
     enumerate_training_files
     train_on_fixtures
+    train_classifier_on_fixtures
   end
 
   config.after(:all) do
@@ -21,6 +22,10 @@ def train_on_fixtures
   end
 
   FileUtils.copy 'spec/fixtures/train.txt', 'model/train.txt'
+end
+
+def train_classifier_on_fixtures
+  Dicot::Classify.train("Where's Will? (Friday Morning)", "Out of Office")
 end
 
 def enumerate_training_files

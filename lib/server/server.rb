@@ -26,6 +26,10 @@ class Dicot
         Dicot.train(data["string"], tags)
       end
 
+      def add_classification(params)
+        raise "not implemented"
+      end
+
       def feedback_queue
         Dicot.feedback_queue.to_json
       end
@@ -88,6 +92,10 @@ class Dicot
     post '/add_sequence' do
       add_sequence params
       "sequence added"
+    end
+
+    post '/add_classification' do
+      add_classification params
     end
 
     get '/feedback_queue' do

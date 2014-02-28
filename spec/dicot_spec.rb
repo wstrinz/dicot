@@ -6,10 +6,35 @@ describe Dicot do
     it 'recognizes and extracts labels' do
       str = "Where's Will (Friday morning)"
       Dicot.label(str).should ==
-      [
-        {string: "Will", tag: "Name", start: 8, end: 11},
-        {string: "Friday morning", tag: "TS", start: 14, end: 27 }
-      ]
+      {
+        string: str,
+        tags: [
+          {string: "Will", tag: "Name", start: 8, end: 11},
+          {string: "Friday morning", tag: "TS", start: 14, end: 27 }
+        ],
+        class: "Out of Office"
+      }
+    end
+  end
+
+  describe 'feedback queue' do
+    before do
+      Dicot::Trainer.feedback_queue.clear
+    end
+
+    it 'adds all labeled strings by default' do
+      str = "Where's Will (Friday morning)"
+      Dicot.label(str)
+      Dicot::Trainer.feedback_queue.last.should ==
+      {
+        string: str,
+        tags:
+        [
+          {string: "Will", tag: "Name", start: 8, end: 11},
+          {string: "Friday morning", tag: "TS", start: 14, end: 27 }
+        ],
+        class: "Out of Office"
+      }
     end
   end
 
@@ -60,10 +85,14 @@ describe Dicot do
 
     it "labels using new data" do
       Dicot.label(string).should ==
-      [
-        {:string=>"yes", :tag=>"arb", :start=>0, :end=>2},
-        {:string=>"yes", :tag=>"arb", :start=>7, :end=>9}
-      ]
+      {
+        string: string,
+        tags: [
+          {:string=>"yes", :tag=>"arb", :start=>0, :end=>2},
+          {:string=>"yes", :tag=>"arb", :start=>7, :end=>9}
+        ],
+        class: "Out of Office"
+      }
     end
   end
 end

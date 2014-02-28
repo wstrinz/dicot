@@ -7,7 +7,7 @@ class Dicot
         labels
       end
 
-      def label(string, add_to_feedback=true)
+      def label(string)
         char_pos = 0
         tags = raw_label(string).first.each_with_object([]) do |raw, arr|
           case raw.last[0]
@@ -30,8 +30,6 @@ class Dicot
           char_pos += raw.first.size
           char_pos += 1 if string[char_pos] == " "
         end
-
-        Trainer.feedback_queue << { string: string, tags: tags } if add_to_feedback
 
         tags
       end
