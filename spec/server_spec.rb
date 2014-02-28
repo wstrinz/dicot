@@ -82,6 +82,11 @@ describe 'Dicot Server' do
       post "/update_feedback_queue", {data: alt_queue}
       expect(Dicot::Trainer.feedback_queue).to eq alt_queue
     end
+
+    it "empty update" do
+      post "/update_feedback_queue", {data: []}
+      expect(Dicot::Trainer.feedback_queue).to eq []
+    end
   end
 
   describe "submit to training queue" do
