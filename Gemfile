@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'wapiti'
-gem 'classifier', git: 'https://github.com/wstrinz/classifier.git'
+gem 'classifier-fork'
 gem 'treat'
 gem 'sinatra'
 

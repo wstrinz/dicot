@@ -3,3 +3,4 @@ model/train.txt
 model/train/*
 !model/train/default.txt
 *.swp
+.bundle/*
