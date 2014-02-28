@@ -6,6 +6,6 @@ rvm:
   - rbx
 
 script:
-  bundle install
-  bundle exec ruby -e "require 'treat'; Treat::Core::Installer.install"
+  bundle install &&
+  bundle exec ruby -e "require 'treat'; Treat::Core::Installer.install" &&
   rspec
