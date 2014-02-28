@@ -1,4 +1,6 @@
+<!---
 [![Build Status](https://travis-ci.org/wstrinz/dicot.png?branch=master)](https://travis-ci.org/wstrinz/dicot)
+-->
 [![Code Climate](https://codeclimate.com/github/wstrinz/dicot.png)](https://codeclimate.com/github/wstrinz/dicot)
 
 

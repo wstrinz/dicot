@@ -43,11 +43,14 @@ class Dicot
 
       def update_feedback_queue(new_queue)
         new_queue = [] if new_queue == nil
+        new_queue = new_queue.values if new_queue.is_a? Hash
         new_queue = new_queue.map{|entry|
-          entry["tags"] = entry["tags"].map do |ent|
-            ent["start"] = ent["start"].to_i
-            ent["end"] = ent["end"].to_i
-            symbolize_keys(ent)
+          if entry["tags"]
+            entry["tags"] = entry["tags"].map do |ent|
+              ent["start"] = ent["start"].to_i
+              ent["end"] = ent["end"].to_i
+              symbolize_keys(ent)
+            end
           end
 
           symbolize_keys(entry)
