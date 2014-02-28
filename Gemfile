@@ -7,6 +7,7 @@ gem 'sinatra'
 
 group :development do
   gem 'rspec'
+  gem 'rake'
   gem 'rack-test'
   gem 'haml'
 end

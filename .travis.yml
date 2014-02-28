@@ -3,4 +3,9 @@ rvm:
   - 1.9.3
   - 2.0.0
   - 2.1.0
-  - jruby
+  - rbx
+
+script:
+  bundle install
+  bundle exec ruby -e "require 'treat'; Treat::Core::Installer.install"
+  rspec
