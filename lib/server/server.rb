@@ -27,10 +27,6 @@ class Dicot
         Dicot.train(data["string"], tags, data["class"])
       end
 
-      def add_classification(params)
-        raise "not implemented"
-      end
-
       def feedback_queue
         Dicot.feedback_queue.to_json
       end
