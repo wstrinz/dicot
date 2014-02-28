@@ -19,7 +19,7 @@ class Dicot
       end
 
       def add_sequence(data)
-        tags = data["tags"].each_with_object({}) do |tag, h|
+        tags = data["tags"].values.each_with_object({}) do |tag, h|
           h[ [tag["start"].to_i, tag["end"].to_i] ] = tag["tag"]
         end
 
@@ -65,7 +65,7 @@ class Dicot
     end
 
     post '/add_sequence' do
-      add_sequence params[:data]
+      add_sequence params
       "sequence added"
     end
 
