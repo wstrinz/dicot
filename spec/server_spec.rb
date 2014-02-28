@@ -12,6 +12,16 @@ describe 'Dicot Server' do
     Sinatra::Application
   end
 
+  before(:all) do
+    train_on_fixtures
+    enumerate_training_files
+  end
+
+  after(:all) do
+    remove_fixtures
+    remove_generated_training_files
+  end
+
   describe "labels input" do
     it "get" do
       get '/label?data=Where%27s%20Will%20(Tuesday%20morning)'
