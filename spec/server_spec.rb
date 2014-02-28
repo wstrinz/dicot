@@ -69,7 +69,7 @@ describe 'Dicot Server' do
 
     it do
       get "/feedback_queue"
-      expect(last_response.body).to eq [{string: @feature_string, tags: @feature_tags}]
+      expect(last_response.body).to eq [{string: @feature_string, tags: @feature_tags}].to_json
     end
   end
 end

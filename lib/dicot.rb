@@ -25,6 +25,10 @@ class Dicot
       Trainer.retrain
     end
 
+    def feedback_queue
+      Trainer.feedback_queue
+    end
+
     def surpress_warnings?
       @surpress_warnings ||= false
     end

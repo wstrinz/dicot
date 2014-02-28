@@ -31,7 +31,7 @@ class Dicot
           char_pos += 1 if string[char_pos] == " "
         end
 
-        Trainer.feedback_queue << { message: string, tags: tags } if add_to_feedback
+        Trainer.feedback_queue << { string: string, tags: tags } if add_to_feedback
 
         tags
       end

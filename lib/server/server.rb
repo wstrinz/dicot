@@ -25,6 +25,10 @@ class Dicot
 
         Dicot.train(data["string"], tags)
       end
+
+      def feedback_queue
+        Dicot.feedback_queue.to_json
+      end
     end
 
     get '/' do
@@ -68,6 +72,11 @@ class Dicot
     post '/add_sequence' do
       add_sequence JSON.parse(params[:data])
       "sequence added"
+    end
+
+    get '/feedback_queue' do
+      content_type :json
+      feedback_queue
     end
 
     run! if app_file == $0

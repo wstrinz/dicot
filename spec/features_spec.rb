@@ -49,7 +49,7 @@ describe Dicot::Features do
         Dicot::Features.label(str)
         Dicot::Trainer.feedback_queue.last.should ==
         {
-          message: str,
+          string: str,
           tags:
           [
             {string: "Will", tag: "Name", start: 8, end: 11},
