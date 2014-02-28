@@ -26,8 +26,8 @@ describe Dicot::Classify do
       Dicot::Classify.classify("This is a test message").should == "test"
     end
 
-    it "isn't very robust" do
-      Dicot::Classify.classify("Remind me to Remind").should == "{error}"
+    it "can classify repeated words" do
+      Dicot::Classify.classify("Remind me to Remind").should == "remind"
     end
   end
 end

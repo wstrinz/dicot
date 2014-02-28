@@ -2,6 +2,18 @@ require_relative '../lib/dicot.rb'
 
 Dicot.surpress_warnings=true
 
+RSpec.configure do |config|
+  config.before(:all) do
+    enumerate_training_files
+    train_on_fixtures
+  end
+
+  config.after(:all) do
+    remove_fixtures
+    remove_generated_training_files
+  end
+end
+
 def train_on_fixtures
   Dicot::Trainer.retrain('spec/fixtures/train.txt')
   if File.exist? 'model/train.txt'
