@@ -10,15 +10,15 @@ require_relative 'classify'
 class Dicot
   class << self
     def label(string, add_to_feedback=true)
-      l = {
+      lab = {
         string: string,
         tags: features(string),
         class: classify(string)
       }
 
-      Trainer.feedback_queue << l if add_to_feedback
+      Trainer.feedback_queue << lab if add_to_feedback
 
-      l
+      lab
     end
 
     def features(string)
@@ -29,8 +29,8 @@ class Dicot
       Classify.classify(string)
     end
 
-    def train(string, tags)
-      Trainer.train(string, tags)
+    def train(string, tags, klass=nil)
+      Trainer.train(string, tags, klass)
     end
 
     def retrain

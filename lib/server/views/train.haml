@@ -9,15 +9,22 @@
   .content-area
     .column-arrangement
       .train-input
-        %textarea{id: 'training_input', cols: 60, rows: 4} Where's Somebody (Friday Morning)
-        #selected
-          Selected:
-        .train-label
-          %textarea{id: 'training_label', cols: 60} Label
+        .train-class
+          Class:
           %br
-          %button{id: 'submit_training', onClick: "addTraining()"} Add
-        #output
-          Labels:
+          %textarea{id: 'training_class', cols: 60 }
+        .train-features
+          Features:
+          %br
+          %textarea{id: 'training_input', cols: 60, rows: 4} No Input
+          #selected
+            Selected:
+          .train-label
+            %textarea{id: 'training_label', cols: 60}
+            %br
+            %button{id: 'submit_training', onClick: "addTraining()"} Add
+          #output
+            Labels:
         .submit-training
           %button{id: 'submit', onClick: 'submitTraining()'} Submit
 

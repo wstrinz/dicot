@@ -18,6 +18,10 @@ class Dicot
         model.add_item string, klass
       end
 
+      def training_queue
+        @training_queue ||= []
+      end
+
       def classify(string)
         if classes.size == 0
           ""

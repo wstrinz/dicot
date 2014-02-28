@@ -36,7 +36,9 @@ class Dicot
         end
       end
 
-      def train(string, tags)
+      def train(string, tags, klass=nil)
+        Classify.training_queue << [string, klass] if klass
+
         char_pos = 0
         in_label = false
 
@@ -70,6 +72,10 @@ class Dicot
       end
 
       def retrain(training_file=:none)
+        Classify.training_queue.each do |str, klass|
+          Classify.train(str, klass)
+        end
+
         if training_file == :none
           if training_buffer.size > 0
             dump_buffer

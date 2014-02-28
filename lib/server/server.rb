@@ -19,11 +19,12 @@ class Dicot
       end
 
       def add_sequence(data)
+        data["tags"] ||= {}
         tags = data["tags"].values.each_with_object({}) do |tag, h|
           h[ [tag["start"].to_i, tag["end"].to_i] ] = tag["tag"]
         end
 
-        Dicot.train(data["string"], tags)
+        Dicot.train(data["string"], tags, data["class"])
       end
 
       def add_classification(params)
