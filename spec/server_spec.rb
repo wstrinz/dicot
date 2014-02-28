@@ -62,14 +62,25 @@ describe 'Dicot Server' do
   end
 
   describe "feedback queue" do
+    let(:alt_queue) { [{string: "test1", tags: [{string: "test", start: 0, end: 3, tag: "test-tag"}] }] }
+
     before do
       Dicot::Trainer.feedback_queue.clear
       Dicot.label(@feature_string)
     end
 
-    it do
+    after do
+      Dicot::Trainer.feedback_queue.clear
+    end
+
+    it "get" do
       get "/feedback_queue"
       expect(last_response.body).to eq [{string: @feature_string, tags: @feature_tags}].to_json
+    end
+
+    it "update" do
+      post "/update_feedback_queue", {data: alt_queue}
+      expect(Dicot::Trainer.feedback_queue).to eq alt_queue
     end
   end
 

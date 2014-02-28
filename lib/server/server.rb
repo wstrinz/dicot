@@ -29,6 +29,25 @@ class Dicot
       def feedback_queue
         Dicot.feedback_queue.to_json
       end
+
+      def symbolize_keys(hash)
+        hash.each_with_object({}) { |ent,h|
+          h[ent[0].to_sym] = ent[1]
+        }
+      end
+
+      def update_feedback_queue(new_queue)
+        new_queue = new_queue.map{|entry|
+          entry["tags"] = entry["tags"].map do |ent|
+            ent["start"] = ent["start"].to_i
+            ent["end"] = ent["end"].to_i
+            symbolize_keys(ent)
+          end
+          symbolize_keys(entry)
+        }
+
+        Dicot::Trainer.feedback_queue = new_queue
+      end
     end
 
     get '/' do
@@ -72,6 +91,12 @@ class Dicot
     get '/feedback_queue' do
       content_type :json
       feedback_queue
+    end
+
+    post '/update_feedback_queue' do
+      content_type :json
+      update_feedback_queue params[:data]
+      {head: :no_content}
     end
 
     run! if app_file == $0
