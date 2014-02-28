@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/wstrinz/dicot.png?branch=master)](https://travis-ci.org/wstrinz/dicot)
+
 Dicot
 =====
 
