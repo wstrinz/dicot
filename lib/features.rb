@@ -33,6 +33,10 @@ class Dicot
 
         tags
       end
+
+      def labels
+        (Trainer::model.labels - ['O']).map{|l| l[2..-1]}.uniq
+      end
     end
   end
 end

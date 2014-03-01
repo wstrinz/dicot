@@ -138,6 +138,10 @@ describe Dicot::Features do
             {:string=>"yes", :tag=>"arb", :start=>7, :end=>9}
         ]
       end
+
+      it "returns list of labels" do
+        Dicot::Features.labels.should == ["Name", "TS", "arb"]
+      end
     end
   end
 end

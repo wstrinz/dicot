@@ -109,6 +109,16 @@ class Dicot
       {head: :no_content}
     end
 
+    get '/list_tags' do
+      content_type :json
+      Dicot::Features.labels.to_json
+    end
+
+    get '/list_classes' do
+      content_type :json
+      Dicot::Classify.classes.to_a.to_json
+    end
+
     run! if app_file == $0
   end
 end

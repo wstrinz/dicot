@@ -8,7 +8,6 @@ class Dicot
     class << self
       def model
         unless File.exist? MODEL_PATH
-          #Wapiti::Model.train([['zz O', 'zz B']], pattern: PATTERN_PATH).save(MODEL_PATH)
           retrain(TRAINING_BASE + "/default.txt")
           @model.save(MODEL_PATH)
         end

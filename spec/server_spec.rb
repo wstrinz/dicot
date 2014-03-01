@@ -114,4 +114,16 @@ describe 'Dicot Server' do
       expect(Dicot::Trainer.training_buffer.last).to eq expected_training_buffer
     end
   end
+
+  describe "autocomplete word lists" do
+    it "classes" do
+      get "/list_classes"
+      expect(last_response.body).to eq Dicot::Classify.classes.to_a.to_json
+    end
+
+    it "tags" do
+      get "/list_tags"
+      expect(last_response.body).to eq Dicot::Features.labels.to_json
+    end
+  end
 end
