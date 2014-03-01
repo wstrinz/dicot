@@ -23,3 +23,15 @@ Then(/^I should see labeling output$/) do
   }
   expect(page).to have_content label_response.to_json
 end
+
+Given(/^There is feedback in the queue$/) do
+  Dicot.label("Where's Will (Monday Afternoon)", true)
+end
+
+When(/^I am on the training page$/) do
+  visit "/train"
+end
+
+Then(/^I should see the head of the feedback queue$/) do
+  expect(find("#training_input")).to have_content "Where's Will (Monday Afternoon)"
+end

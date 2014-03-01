@@ -4,6 +4,7 @@ gem 'wapiti'
 gem 'classifier-fork'
 gem 'treat'
 gem 'sinatra'
+gem 'haml'
 
 group :development do
   gem 'rspec'
@@ -12,5 +13,5 @@ group :development do
   gem 'capybara-webkit'
   gem 'rake'
   gem 'rack-test'
-  gem 'haml'
+  gem 'pry'
 end
