@@ -10,11 +10,23 @@ Feature: Label from web interface
     Then I should see the head of the feedback queue
 
   @javascript
-  Scenario: Train on a string
+  Scenario: Train class for a string
     Given The feedback queue is empty
       And I submit "Test Input" for labeling
-      And I am on the training page
-    When I enter "test" into the training_class field
+    When I am on the training page
+      And I enter "test" into the training_class field
       And I press "Submit"
       And I wait for the server
     Then the last entry in the training queue should have class "test"
+
+  @javascript
+  Scenario: Train tags for a string
+    Given The feedback queue is empty
+      And I submit "My name is Inigo Montoya" for labeling
+    When I am on the training page
+      And I select the training input at 11 and 24
+      And I enter "Name" into the training_label field
+      And I press "Add"
+      And I press "Submit"
+      And I wait for the server
+    Then the training queue should contain the Inigo Montoya data

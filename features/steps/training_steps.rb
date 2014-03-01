@@ -14,10 +14,26 @@ Given(/^I submit "(.*?)" for labeling$/) do |string|
   Dicot.label(string, true)
 end
 
+When(/^I check it$/) do
+  page.evaluate_script('addTraining()')
+  puts page.evaluate_script('$("#output").text()')
+end
+
 When(/^I enter "(.*?)" into the (.*?) field$/) do |string, field|
   fill_in "#{field}", with: string
 end
 
 Then(/^the last entry in the training queue should have class "(.*?)"$/) do |klass|
   Dicot::Classify.training_queue.last.last.should == klass
+end
+
+When(/^I select the training input at (\d+) and (\d+)$/) do |start, ending|
+  #str = find("#training_input").to_s
+  page.evaluate_script("selStart = #{start}; selEnd = #{ending} ;")
+end
+
+Then(/^the training queue should contain the Inigo Montoya data$/) do
+  tokens = %w{My name is Inigo Montoya}
+  tags = %w{O O O B-Name I-Name}
+  Dicot::Trainer.training_buffer.last.should == tokens.zip(tags)
 end
