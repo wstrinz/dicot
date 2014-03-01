@@ -52,11 +52,11 @@ describe Dicot do
       untrained = %w{O O O O O O O O O}
       trained = %w{O O O O O O B-thing I-thing O}
 
-      Dicot::Features.raw_label(str).first.map(&:last).should == untrained
+      Dicot::Tag.raw_label(str).first.map(&:last).should == untrained
       Dicot::Trainer.training_buffer << Dicot::Tokenizer.tokenize(str).zip(trained)
       Dicot.retrain
 
-      Dicot::Features.raw_label(str).first.map(&:last).should == trained
+      Dicot::Tag.raw_label(str).first.map(&:last).should == trained
     end
   end
 
@@ -80,7 +80,7 @@ describe Dicot do
 
     it "retrains using new data" do
       Dicot::Trainer.retrain
-      Dicot::Features.raw_label(string).first.should == expected
+      Dicot::Tag.raw_label(string).first.should == expected
     end
 
     it "labels using new data" do

@@ -22,7 +22,7 @@ class Dicot
     end
 
     def features(string)
-      Features.label(string)
+      Tag.label(string)
     end
 
     def classify(string)

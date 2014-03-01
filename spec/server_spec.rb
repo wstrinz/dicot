@@ -123,7 +123,7 @@ describe 'Dicot Server' do
 
     it "tags" do
       get "/list_tags"
-      expect(last_response.body).to eq Dicot::Features.labels.to_json
+      expect(last_response.body).to eq Dicot::Tag.labels.to_json
     end
   end
 end

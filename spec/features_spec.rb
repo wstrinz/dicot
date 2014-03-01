@@ -1,6 +1,6 @@
 require_relative 'spec_helper.rb'
 
-describe Dicot::Features do
+describe Dicot::Tag do
   before(:all) do
     train_on_fixtures
     enumerate_training_files
@@ -13,25 +13,25 @@ describe Dicot::Features do
 
   describe ".raw_label" do
     it "should label a string" do
-      Dicot::Features.raw_label("Hello I am a string").should_not be nil
+      Dicot::Tag.raw_label("Hello I am a string").should_not be nil
     end
 
     it "correctly labels trained string" do
       str = "Where's Will (Friday morning)"
-      Dicot::Features.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
+      Dicot::Tag.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
     end
 
 
     it 'identifies features in novel string' do
       str = "Where's Will (Ragnarok morning)"
-      Dicot::Features.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
+      Dicot::Tag.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
     end
   end
 
   describe ".label" do
     it 'recognizes and extracts labels' do
       str = "Where's Will (Friday morning)"
-      Dicot::Features.label(str).should ==
+      Dicot::Tag.label(str).should ==
       [
         {string: "Will", tag: "Name", start: 8, end: 11},
         {string: "Friday morning", tag: "TS", start: 14, end: 27 }
@@ -40,7 +40,7 @@ describe Dicot::Features do
 
     it "gracefully handles things it doesn't understand" do
       str = "Test Input"
-      Dicot::Features.label(str).should == []
+      Dicot::Tag.label(str).should == []
     end
 
 
@@ -60,7 +60,7 @@ describe Dicot::Features do
       end
 
       it 'handles tokens properly' do
-        Dicot::Features.label(@str).should == [{ string: "token's?", tag: "test", start: 6, end: 13 }]
+        Dicot::Tag.label(@str).should == [{ string: "token's?", tag: "test", start: 6, end: 13 }]
       end
     end
   end
@@ -79,11 +79,11 @@ describe Dicot::Features do
       untrained = %w{O O O O O O O O O}
       trained = %w{O O O O O O B-thing I-thing O}
 
-      Dicot::Features.raw_label(str).first.map(&:last).should == untrained
+      Dicot::Tag.raw_label(str).first.map(&:last).should == untrained
       Dicot::Trainer.training_buffer << Dicot::Tokenizer.tokenize(str).zip(trained)
       Dicot.retrain
 
-      Dicot::Features.raw_label(str).first.map(&:last).should == trained
+      Dicot::Tag.raw_label(str).first.map(&:last).should == trained
     end
 
     it "still correctly labels known strings" do
@@ -93,7 +93,7 @@ describe Dicot::Features do
 
       Dicot::Trainer.training_buffer << Dicot::Tokenizer.tokenize(str2).zip(trained)
       Dicot.retrain
-      Dicot::Features.raw_label(str1).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
+      Dicot::Tag.raw_label(str1).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
     end
   end
 
@@ -103,7 +103,7 @@ describe Dicot::Features do
 
     it do
       File.delete 'model/model.mod'
-      Dicot::Features.raw_label("anything should be O").first.map(&:last).should == %w{O O O O}
+      Dicot::Tag.raw_label("anything should be O").first.map(&:last).should == %w{O O O O}
     end
   end
 
@@ -128,11 +128,11 @@ describe Dicot::Features do
 
       it "retrains using new data" do
         Dicot::Trainer.retrain
-        Dicot::Features.raw_label(string).first.should == expected
+        Dicot::Tag.raw_label(string).first.should == expected
       end
 
       it "labels using new data" do
-        Dicot::Features.label(string).should ==
+        Dicot::Tag.label(string).should ==
         [
             {:string=>"yes", :tag=>"arb", :start=>0, :end=>2},
             {:string=>"yes", :tag=>"arb", :start=>7, :end=>9}
@@ -140,7 +140,7 @@ describe Dicot::Features do
       end
 
       it "returns list of labels" do
-        Dicot::Features.labels.should == ["Name", "TS", "arb"]
+        Dicot::Tag.labels.should == ["Name", "TS", "arb"]
       end
     end
   end

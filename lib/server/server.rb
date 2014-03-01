@@ -111,7 +111,7 @@ class Dicot
 
     get '/list_tags' do
       content_type :json
-      Dicot::Features.labels.to_json
+      Dicot::Tag.labels.to_json
     end
 
     get '/list_classes' do

@@ -1,5 +1,5 @@
 class Dicot
-  class Features
+  class Tag
     class << self
       def raw_label(string)
         tokens = Tokenizer.tokenize(string)
