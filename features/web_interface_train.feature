@@ -30,3 +30,13 @@ Feature: Label from web interface
       And I press "Submit"
       And I wait for the server
     Then the training queue should contain the Inigo Montoya data
+
+  @javascript
+  Scenario: Submitting training statement updates feedback queue
+    Given The feedback queue is empty
+      And I submit "My name is Inigo Montoya" for labeling
+    When I am on the training page
+      And I tag the training input at 11 and 24 with "Name"
+      And I press "Submit"
+      And I wait for the server
+    Then the feedback queue should be empty

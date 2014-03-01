@@ -32,8 +32,18 @@ When(/^I select the training input at (\d+) and (\d+)$/) do |start, ending|
   page.evaluate_script("selStart = #{start}; selEnd = #{ending} ;")
 end
 
+When(/^I tag the training input at (\d+) and (\d+) with "(.*?)"$/) do |start, ending, tag|
+  step "I select the training input at #{start} and #{ending}"
+  step "I enter \"#{tag}\" into the training_label field"
+  step 'I press "Add"'
+end
+
 Then(/^the training queue should contain the Inigo Montoya data$/) do
   tokens = %w{My name is Inigo Montoya}
   tags = %w{O O O B-Name I-Name}
   Dicot::Trainer.training_buffer.last.should == tokens.zip(tags)
+end
+
+Then(/^the feedback queue should be empty$/) do
+  expect(Dicot::Trainer.feedback_queue).to be_empty
 end
