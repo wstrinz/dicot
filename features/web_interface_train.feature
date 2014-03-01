@@ -40,3 +40,21 @@ Feature: Label from web interface
       And I press "Submit"
       And I wait for the server
     Then the feedback queue should be empty
+
+  @javascript
+  Scenario: Retrain using submitted data
+    Given The feedback queue is empty
+      And I am on the index page
+      And I enter "Where's Bill going to be Thursday Afternoon" into the training input box
+      And I press "Label"
+    Then I should see some but not all tags
+    When I visit "train"
+      And I tag the training input at 8 and 11 with "Name"
+      And I tag the training input at 25 and 42 with "TS"
+      And I press "Submit"
+      And I wait for the server
+      And I visit "retrain"
+      And I visit ""
+      And I enter "Where's Bill going to be Thursday Afternoon" into the training input box
+      And I press "Label"
+    Then I should see the TS tag as well

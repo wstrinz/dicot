@@ -6,6 +6,10 @@ When(/^I am on the training page$/) do
   visit "/train"
 end
 
+When(/^I visit "(.*?)"$/) do |place|
+  visit "/#{place}"
+end
+
 When(/^I press "(.*?)"$/) do |button|
   click_button(button)
 end
