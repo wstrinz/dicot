@@ -19,7 +19,5 @@ When(/^I enter "(.*?)" into the (.*?) field$/) do |string, field|
 end
 
 Then(/^the last entry in the training queue should have class "(.*?)"$/) do |klass|
-  sleep(0.1)
-  #puts Dicot::Classify.training_queue
   Dicot::Classify.training_queue.last.last.should == klass
 end

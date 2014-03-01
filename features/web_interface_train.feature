@@ -16,4 +16,5 @@ Feature: Label from web interface
       And I am on the training page
     When I enter "test" into the training_class field
       And I press "Submit"
+      And I wait for the server
     Then the last entry in the training queue should have class "test"

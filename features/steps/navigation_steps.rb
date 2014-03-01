@@ -9,3 +9,7 @@ end
 When(/^I press "(.*?)"$/) do |button|
   click_button(button)
 end
+
+When(/^I wait for the server$/) do
+  sleep(0.05)
+end
