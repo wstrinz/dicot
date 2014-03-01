@@ -4,7 +4,7 @@ require 'treat'
 
 require_relative 'tokenizer'
 require_relative 'trainer'
-require_relative 'features'
+require_relative 'tag'
 require_relative 'classify'
 
 class Dicot
