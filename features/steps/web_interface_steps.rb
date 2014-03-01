@@ -19,7 +19,7 @@ Then(/^I should see labeling output$/) do
         {string: "Will", tag:"Name", start:8, end:11},
         {string: "Monday Afternoon", tag:"TS", start:14, end:29}
       ],
-      class:""
+      class:"Out of Office"
   }
   expect(page).to have_content label_response.to_json
 end
