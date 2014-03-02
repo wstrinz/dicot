@@ -45,19 +45,20 @@ Feature: Label from web interface
   Scenario: Retrain using submitted data
     Given The feedback queue is empty
       And I am on the index page
-      And I enter "Where's Bill going to be Thursday Afternoon" into the training input box
+      And I enter "What color is the sun?" into the training input box
       And I press "Label"
-    Then I should see some but not all tags
+    Then I should see the wrong tags and class for the sun question
     When I visit "train"
-      And I tag the training input at 8 and 11 with "Name"
-      And I tag the training input at 25 and 42 with "TS"
+      And I tag the training input at 5 and 10 with "Predicate"
+      And I tag the training input at 18 and 21 with "Subject"
+      And I enter "Question" into the training_class field
       And I press "Submit"
       And I wait for the server
       And I visit "retrain"
       And I visit ""
-      And I enter "Where's Bill going to be Thursday Afternoon" into the training input box
+      And I enter "What color is the sun?" into the training input box
       And I press "Label"
-    Then I should see the TS tag as well
+    Then I should see tags and features for the color of the sun question
 
   @javascript
   Scenario: Clears input fields after submitting training data
