@@ -48,11 +48,10 @@ describe Dicot do
     end
 
     it "can be retrained" do
-      str = "Bla Bla mostly arbitray text I wrote right here"
-      untrained = %w{O O O O O O O O O}
-      trained = %w{O O O O O O B-thing I-thing O}
+      str = "Bla Bla mostly arbitray text I yellow banana here"
+      trained = %w{O O O O O O B-unexpected I-unexpected O}
 
-      Dicot::Tag.raw_label(str).first.map(&:last).should == untrained
+      Dicot::Tag.raw_label(str).first.map(&:last).should_not == trained
       Dicot::Trainer.training_buffer << Dicot::Tokenizer.tokenize(str).zip(trained)
       Dicot.retrain
 

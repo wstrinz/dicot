@@ -26,6 +26,11 @@ describe Dicot::Tag do
       str = "Where's Will (Ragnarok morning)"
       Dicot::Tag.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
     end
+
+    it 'respects feature boundaries' do
+      str = "Where's Will this afternoon"
+      Dicot::Tag.raw_label(str).first.map(&:last).should == %w{O O B-Name B-TS I-TS}
+    end
   end
 
   describe ".label" do
