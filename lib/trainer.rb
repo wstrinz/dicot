@@ -45,10 +45,10 @@ class Dicot
         data = Tokenizer.tokenize(string).each_with_object([]) do |token, arr|
           loc = tags.keys.find{|l| char_pos.between?(l[0], l[1])}
           if loc
-           #unless current_label && tags[loc] == current_label
-           #  in_label = false
-           #end
-           #current_label = tags[loc]
+            unless current_label && tags[loc] == current_label
+              in_label = false
+            end
+            current_label = tags[loc]
 
             if in_label
               arr << [token, "I-#{tags[loc]}"]
