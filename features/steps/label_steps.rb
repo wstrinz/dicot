@@ -57,7 +57,7 @@ Then(/^I should see tags and features for the color of the sun question$/) do
     "string"=>"What color is the sun?",
     "tags"=> [
       {"string"=>"color", "tag"=>"Predicate", "start"=>5, "end"=>9},
-      {"string"=>"sun?", "tag"=>"Subject", "start"=>18, "end"=>21}
+      {"string"=>"sun", "tag"=>"Subject", "start"=>18, "end"=>20}
     ],
     "class"=>"Question"
   }
