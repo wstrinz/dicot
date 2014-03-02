@@ -58,3 +58,40 @@ Feature: Label from web interface
       And I enter "Where's Bill going to be Thursday Afternoon" into the training input box
       And I press "Label"
     Then I should see the TS tag as well
+
+  @javascript
+  Scenario: Clears input fields after submitting training data
+    Given The feedback queue is empty
+      And I submit "My name is Inigo Montoya" for labeling
+    When I am on the training page
+      And I tag the training input at 11 and 24 with "Name"
+      And I press "Submit"
+      And I wait for the server
+    Then the field "training_input" should be blank
+      And the field "training_class" should be blank
+      And the field "training_label" should be blank
+      And the section "output" should be blank
+
+  @javascript
+  Scenario: Scrolls through feedback queue
+    Given There are 3 things in the feedback queue
+    When I am on the training page
+    Then the feedback counter should read "1/3"
+      And I should see feedback item 1
+    When I enter "test" into the training_class field
+      And I press "Submit"
+      And I wait for the server
+    Then the feedback counter should read "1/2"
+      And I should see feedback item 2
+    When I press "Next"
+    Then the feedback counter should read "2/2"
+      And I should see feedback item 3
+    When I press "Prev"
+    Then the feedback counter should read "1/2"
+      And I should see feedback item 2
+    When I press "Skip"
+    Then the feedback counter should read "1/1"
+      And I should see feedback item 3
+    When I press "Confirm"
+    Then the feedback counter should read "1/1"
+      And I should see no feedback items

@@ -3,7 +3,7 @@ Given(/^There is feedback in the queue$/) do
 end
 
 Then(/^I should see the head of the feedback queue$/) do
-  expect(find("#training_input")).to have_content "Where's Will (Monday Afternoon)"
+  expect(find("#training_input").value).to eq "Where's Will (Monday Afternoon)"
 end
 
 Given(/^The feedback queue is empty$/) do
@@ -45,5 +45,13 @@ Then(/^the training queue should contain the Inigo Montoya data$/) do
 end
 
 Then(/^the feedback queue should be empty$/) do
-  expect(Dicot::Trainer.feedback_queue).to be_empty
+  expect(Dicot::Trainer.feedback_queue).to eq []
+end
+
+Then(/^the field "(.*?)" should be blank$/) do |field|
+  expect(find("##{field}").value).to eq ""
+end
+
+Then(/^the section "(.*?)" should be blank$/) do |section|
+  expect(find("##{section}").text).to eq ""
 end
