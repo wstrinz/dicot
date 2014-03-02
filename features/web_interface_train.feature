@@ -76,22 +76,22 @@ Feature: Label from web interface
   Scenario: Scrolls through feedback queue
     Given There are 3 things in the feedback queue
     When I am on the training page
-    Then the feedback counter should read "1/3"
+    Then the feedback counter should read "1 / 3"
       And I should see feedback item 1
     When I enter "test" into the training_class field
       And I press "Submit"
       And I wait for the server
-    Then the feedback counter should read "1/2"
+    Then the feedback counter should read "1 / 2"
       And I should see feedback item 2
     When I press "Next"
-    Then the feedback counter should read "2/2"
+    Then the feedback counter should read "2 / 2"
       And I should see feedback item 3
     When I press "Prev"
-    Then the feedback counter should read "1/2"
+    Then the feedback counter should read "1 / 2"
       And I should see feedback item 2
     When I press "Skip"
-    Then the feedback counter should read "1/1"
+    Then the feedback counter should read "1 / 1"
       And I should see feedback item 3
     When I press "Confirm"
-    Then the feedback counter should read "1/1"
+    Then the feedback counter should read "0 / 0"
       And I should see no feedback items

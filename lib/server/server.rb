@@ -42,6 +42,7 @@ class Dicot
         new_queue = new_queue.values if new_queue.is_a? Hash
         new_queue = new_queue.map{|entry|
           if entry["tags"]
+            entry["tags"] = entry["tags"].values if entry["tags"].is_a? Hash
             entry["tags"] = entry["tags"].map do |ent|
               ent["start"] = ent["start"].to_i
               ent["end"] = ent["end"].to_i

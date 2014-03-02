@@ -55,3 +55,32 @@ end
 Then(/^the section "(.*?)" should be blank$/) do |section|
   expect(find("##{section}").text).to eq ""
 end
+
+Given(/^There are 3 things in the feedback queue$/) do
+  @feedback_items = {
+    "1" => Dicot.label("This is a thing"),
+    "2" => Dicot.label("Where's Will? (Monday Tuesday)"),
+    "3" => Dicot.label("Hello computer")
+  }
+end
+
+Then(/^the feedback counter should read "(.*?)"$/) do |count_string|
+  expect(find("#feedback-count").text).to eq count_string
+end
+
+Then(/^I should see feedback item (\d+)$/) do |item_id|
+  item = @feedback_items[item_id]
+  expect(find("#training_input").value).to eq item[:string]
+  expect(find("#training_class").value).to eq item[:class]
+  item[:tags].each do |tag|
+    str = "(#{tag[:start]}, #{tag[:end]}): #{tag[:string]} - #{tag[:tag]}"
+    expect(find("#feedback-display-labels-content")).to have_content str
+  end
+end
+
+Then(/^I should see no feedback items$/) do
+  step 'the field "training_input" should be blank'
+  step 'the field "training_class" should be blank'
+  step 'the field "training_label" should be blank'
+  step 'the section "output" should be blank'
+end
