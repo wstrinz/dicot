@@ -2,24 +2,19 @@ class Dicot
   class Classify
     class << self
       def model
-        #@model ||= Classifier::LSI.new
         @model ||= StuffClassifier::Bayes.new("Dicot")
       end
 
       def reset!
-        #@model = Classifier::LSI.new
         @model = nil
         model
       end
 
       def classes
-        #@classes ||= Set.new
         model.categories
       end
 
       def train(string, klass)
-        #classes << klass
-        #model.add_item string, klass
         model.train(klass, string)
       end
 
