@@ -91,7 +91,7 @@ describe Dicot do
           {:string=>"yes", :tag=>"arb", :start=>0, :end=>2},
           {:string=>"yes", :tag=>"arb", :start=>7, :end=>9}
         ],
-        class: "Out of Office"
+        class: "test"
       }
     end
   end

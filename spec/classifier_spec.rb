@@ -2,9 +2,11 @@
 require_relative 'spec_helper.rb'
 
 describe Dicot::Classify do
-  let(:data) {["This is a test message", "test"]}
-  let(:data2) {["Some other sort of message", "not-test"]}
-  let(:data3) {["Remind me to do a thing", "remind"]}
+  let(:data) {[
+    ["This is a test message", "test"],
+    ["Some other sort of message?", "not-test"],
+    ["Remind me to do a thing", "remind"]
+  ]}
 
   describe ".train" do
     before do
@@ -12,19 +14,26 @@ describe Dicot::Classify do
     end
 
     it do
-      Dicot::Classify.train(*data)
-      Dicot::Classify.train(*data2)
-      Dicot::Classify.train(*data3)
-      Dicot::Classify.items.should == [data[0], data2[0], data3[0]]
+      data.each do |d|
+        Dicot::Classify.train(*d)
+      end
+
+      data.each do |d|
+        Dicot::Classify.classify(d[0]).should == d[1]
+      end
+    end
+
+    it "isn't totally robust" do
+      Dicot::Classify.train("What's up?", "chat")
     end
   end
 
   describe ".classify" do
     before do
       Dicot::Classify.reset!
-      Dicot::Classify.train(*data)
-      Dicot::Classify.train(*data2)
-      Dicot::Classify.train(*data3)
+      data.each do |d|
+        Dicot::Classify.train(*d)
+      end
     end
 
     it "works usually" do

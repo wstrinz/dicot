@@ -1,5 +1,5 @@
 require 'wapiti'
-require 'classifier'
+require 'stuff-classifier'
 require 'treat'
 
 require_relative 'tokenizer'
