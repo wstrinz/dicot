@@ -24,7 +24,7 @@ Feature: Label from web interface
     Given The feedback queue is empty
       And I submit "My name is Inigo Montoya" for labeling
     When I am on the training page
-      And I select the training input at 11 and 24
+      And I select the training input at 12 and 24
       And I enter "Name" into the training_label field
       And I press "Add"
       And I press "Submit"
