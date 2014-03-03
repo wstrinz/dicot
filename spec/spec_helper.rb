@@ -4,6 +4,7 @@ Dicot.surpress_warnings=true
 
 RSpec.configure do |config|
   config.before(:all) do
+    save_model
     enumerate_training_files
     train_on_fixtures
     train_classifier_on_fixtures
@@ -12,6 +13,7 @@ RSpec.configure do |config|
   config.after(:all) do
     remove_fixtures
     remove_generated_training_files
+    restore_model
   end
 end
 

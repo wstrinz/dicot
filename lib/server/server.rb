@@ -16,6 +16,7 @@ class Dicot
 
       def retrain
         Dicot.retrain
+        Dicot::CRF.save
       end
 
       def add_sequence(data)

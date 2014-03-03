@@ -10,6 +10,7 @@ Capybara.javascript_driver = :webkit
 
 Before do
   if !$retrained
+    save_model
     enumerate_training_files
     train_on_fixtures
     train_classifier_on_fixtures
@@ -20,6 +21,7 @@ end
 at_exit do
   remove_fixtures
   remove_generated_training_files
+  restore_model
 end
 
 def train_on_fixtures
@@ -51,4 +53,12 @@ def remove_fixtures
     FileUtils.copy 'model/train.txt.bak', 'model/train.txt'
     FileUtils.rm 'model/train.txt.bak'
   end
+end
+
+def save_model
+  $original_model = IO.read('model/model.mod')
+end
+
+def restore_model
+  open('model/model.mod','w'){|f| f.write $original_model}
 end
