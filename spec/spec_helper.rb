@@ -16,7 +16,7 @@ RSpec.configure do |config|
 end
 
 def train_on_fixtures
-  Dicot::Trainer.retrain('spec/fixtures/train.txt')
+  Dicot::CRF.retrain('spec/fixtures/train.txt')
   if File.exist? 'model/train.txt'
     FileUtils.copy 'model/train.txt', 'model/train.txt.bak'
   end

@@ -53,7 +53,7 @@ class Dicot
           symbolize_keys(entry)
         }
 
-        Dicot::Trainer.feedback_queue = new_queue
+        Dicot::CRF.feedback_queue = new_queue
       end
     end
 

@@ -1,5 +1,5 @@
 class Dicot
-  class Trainer
+  class CRF
     MODEL_PATH = 'model/model.mod'
     TRAINING_PATH = 'model/train.txt'
     TRAINING_BASE = 'model/train'

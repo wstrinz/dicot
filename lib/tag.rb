@@ -3,7 +3,7 @@ class Dicot
     class << self
       def raw_label(string)
         tokens = Tokenizer.tokenize(string)
-        labels = Trainer.label([tokens])
+        labels = CRF.label([tokens])
         labels
       end
 
@@ -35,7 +35,7 @@ class Dicot
       end
 
       def labels
-        (Trainer::model.labels - ['O']).map{|l| l[2..-1]}.uniq
+        (CRF::model.labels - ['O']).map{|l| l[2..-1]}.uniq
       end
     end
   end

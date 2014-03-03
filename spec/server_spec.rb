@@ -72,12 +72,12 @@ describe 'Dicot Server' do
     let(:alt_queue) { [{string: "test1", tags: [{string: "test", start: 0, end: 3, tag: "test-tag"}] }] }
 
     before do
-      Dicot::Trainer.feedback_queue.clear
+      Dicot::CRF.feedback_queue.clear
       Dicot.label(@feature_string)
     end
 
     after do
-      Dicot::Trainer.feedback_queue.clear
+      Dicot::CRF.feedback_queue.clear
     end
 
     it "get" do
@@ -87,12 +87,12 @@ describe 'Dicot Server' do
 
     it "update" do
       post "/update_feedback_queue", {data: alt_queue}
-      expect(Dicot::Trainer.feedback_queue).to eq alt_queue
+      expect(Dicot::CRF.feedback_queue).to eq alt_queue
     end
 
     it "empty update" do
       post "/update_feedback_queue", {data: []}
-      expect(Dicot::Trainer.feedback_queue).to eq []
+      expect(Dicot::CRF.feedback_queue).to eq []
     end
   end
 
@@ -111,7 +111,7 @@ describe 'Dicot Server' do
 
     it do
       post "/add_sequence", {string: @feature_string, tags: js_tags}
-      expect(Dicot::Trainer.training_buffer.last).to eq expected_training_buffer
+      expect(Dicot::CRF.training_buffer.last).to eq expected_training_buffer
     end
   end
 

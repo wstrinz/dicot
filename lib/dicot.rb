@@ -3,7 +3,7 @@ require 'stuff-classifier'
 require 'treat'
 
 require_relative 'tokenizer'
-require_relative 'trainer'
+require_relative 'crf'
 require_relative 'tag'
 require_relative 'classify'
 
@@ -16,7 +16,7 @@ class Dicot
         class: classify(string)
       }
 
-      Trainer.feedback_queue << lab if add_to_feedback
+      CRF.feedback_queue << lab if add_to_feedback
 
       lab
     end
@@ -30,15 +30,15 @@ class Dicot
     end
 
     def train(string, tags, klass=nil)
-      Trainer.train(string, tags, klass)
+      CRF.train(string, tags, klass)
     end
 
     def retrain
-      Trainer.retrain
+      CRF.retrain
     end
 
     def feedback_queue
-      Trainer.feedback_queue
+      CRF.feedback_queue
     end
 
     def surpress_warnings?

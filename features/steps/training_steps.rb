@@ -7,7 +7,7 @@ Then(/^I should see the head of the feedback queue$/) do
 end
 
 Given(/^The feedback queue is empty$/) do
-  Dicot::Trainer.feedback_queue.clear
+  Dicot::CRF.feedback_queue.clear
 end
 
 Given(/^I submit "(.*?)" for labeling$/) do |string|
@@ -41,11 +41,11 @@ end
 Then(/^the training queue should contain the Inigo Montoya data$/) do
   tokens = %w{My name is Inigo Montoya}
   tags = %w{O O O B-Name I-Name}
-  Dicot::Trainer.training_buffer.last.should == tokens.zip(tags)
+  Dicot::CRF.training_buffer.last.should == tokens.zip(tags)
 end
 
 Then(/^the feedback queue should be empty$/) do
-  expect(Dicot::Trainer.feedback_queue).to eq []
+  expect(Dicot::CRF.feedback_queue).to eq []
 end
 
 Then(/^the field "(.*?)" should be blank$/) do |field|
