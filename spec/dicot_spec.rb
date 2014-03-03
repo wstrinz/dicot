@@ -52,7 +52,7 @@ describe Dicot do
       trained = %w{O O O O O O B-unexpected I-unexpected O}
 
       Dicot::Tag.raw_label(str).first.map(&:last).should_not == trained
-      Dicot::CRF.training_buffer << Dicot::Tokenizer.tokenize(str).zip(trained)
+      Dicot::CRF.training_queue << Dicot::Tokenizer.tokenize(str).zip(trained)
       Dicot.retrain
 
       Dicot::Tag.raw_label(str).first.map(&:last).should == trained
@@ -72,9 +72,9 @@ describe Dicot do
       open('model/train.txt','w'){|f| f.write @original_training_text}
     end
 
-    it "adds to training buffer" do
+    it "adds to training queue" do
       Dicot.train(string, tags)
-      Dicot::CRF.training_buffer.last.should == expected
+      Dicot::CRF.training_queue.last.should == expected
     end
 
     it "retrains using new data" do

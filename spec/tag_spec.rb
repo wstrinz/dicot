@@ -54,7 +54,7 @@ describe Dicot::Tag do
         save_training_text
         @str = "Weird token's?"
         @train = %w{O B-test I-test I-test}
-        Dicot::CRF.training_buffer << Dicot::Tokenizer.tokenize(@str).zip(@train)
+        Dicot::CRF.training_queue << Dicot::Tokenizer.tokenize(@str).zip(@train)
         Dicot::CRF.retrain
       end
 
@@ -85,7 +85,7 @@ describe Dicot::Tag do
       trained = %w{O O O O O O B-thing I-thing O}
 
       Dicot::Tag.raw_label(str).first.map(&:last).should == untrained
-      Dicot::CRF.training_buffer << Dicot::Tokenizer.tokenize(str).zip(trained)
+      Dicot::CRF.training_queue << Dicot::Tokenizer.tokenize(str).zip(trained)
       Dicot.retrain
 
       Dicot::Tag.raw_label(str).first.map(&:last).should == trained
@@ -96,7 +96,7 @@ describe Dicot::Tag do
       str2 = "Where's Will (on the Ragnarok morning)"
       trained = %w{O O B-Name O O O B-TS I-TS O}
 
-      Dicot::CRF.training_buffer << Dicot::Tokenizer.tokenize(str2).zip(trained)
+      Dicot::CRF.training_queue << Dicot::Tokenizer.tokenize(str2).zip(trained)
       Dicot.retrain
       Dicot::Tag.raw_label(str1).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
     end
@@ -126,9 +126,9 @@ describe Dicot::Tag do
         open('model/train.txt','w'){|f| f.write @original_training_text}
       end
 
-      it "adds to training buffer" do
+      it "adds to training queue" do
         Dicot.train(string, tags)
-        Dicot::CRF.training_buffer.last.should == expected
+        Dicot::CRF.training_queue.last.should == expected
       end
 
       it "retrains using new data" do

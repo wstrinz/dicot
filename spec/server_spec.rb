@@ -97,7 +97,7 @@ describe 'Dicot Server' do
   end
 
   describe "submit to training queue" do
-    let(:expected_training_buffer) {[
+    let(:expected_training_queue) {[
       ["Where", "O"],
       ["'s", "O"],
       ["Will", "B-Name"],
@@ -111,7 +111,7 @@ describe 'Dicot Server' do
 
     it do
       post "/add_sequence", {string: @feature_string, tags: js_tags}
-      expect(Dicot::CRF.training_buffer.last).to eq expected_training_buffer
+      expect(Dicot::CRF.training_queue.last).to eq expected_training_queue
     end
   end
 

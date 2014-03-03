@@ -22,16 +22,16 @@ class Dicot
         model.label(data)
       end
 
-      def dump_buffer
+      def dump_queue
         file_name = "#{Time.now.to_i}_train.txt"
         open(File.join(TRAINING_BASE, file_name), 'w') do |f|
-          training_buffer.each do |ent|
+          training_queue.each do |ent|
             ent.each do |d|
               f.write d.join(" ") + "\n"
             end
             f.write "\n"
           end
-          training_buffer.clear
+          training_queue.clear
         end
       end
 
@@ -50,8 +50,8 @@ class Dicot
         end
 
         if training_file == :none
-          if training_buffer.size > 0
-            dump_buffer
+          if training_queue.size > 0
+            dump_queue
           end
 
           aggregate_training_files
@@ -62,8 +62,8 @@ class Dicot
         end
       end
 
-      def training_buffer
-        @training_buffer ||= []
+      def training_queue
+        @training_queue ||= []
       end
 
       def feedback_queue
@@ -75,7 +75,7 @@ class Dicot
       end
 
       def add_training_seq(data)
-        training_buffer << data
+        training_queue << data
       end
     end
   end
