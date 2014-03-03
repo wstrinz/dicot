@@ -41,7 +41,7 @@ end
 Then(/^the training queue should contain the Inigo Montoya data$/) do
   tokens = %w{My name is Inigo Montoya}
   tags = %w{O O O B-Name I-Name}
-  Dicot::CRF.training_buffer.last.should == tokens.zip(tags)
+  Dicot::CRF.training_queue.last.should == tokens.zip(tags)
 end
 
 Then(/^the feedback queue should be empty$/) do
