@@ -30,7 +30,8 @@ class Dicot
     end
 
     def train(string, tags, klass=nil)
-      CRF.train(string, tags, klass)
+      Tag.train(string, tags)
+      Classify.training_queue << [string, klass] if klass
     end
 
     def retrain
