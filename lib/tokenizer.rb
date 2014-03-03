@@ -1,3 +1,4 @@
+require 'treat'
 
 class Dicot
   class Tokenizer

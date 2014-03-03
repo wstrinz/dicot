@@ -1,6 +1,3 @@
-require 'wapiti'
-require 'stuff-classifier'
-require 'treat'
 
 require_relative 'tokenizer'
 require_relative 'crf'

@@ -1,3 +1,5 @@
+require 'stuff-classifier'
+
 class Dicot
   class Classify
     class << self

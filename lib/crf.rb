@@ -1,3 +1,5 @@
+require 'wapiti'
+
 class Dicot
   class CRF
     MODEL_PATH = 'model/model.mod'
