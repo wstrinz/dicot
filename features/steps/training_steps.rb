@@ -78,7 +78,7 @@ Then(/^I should see feedback item (\d+)$/) do |item_id|
   expect(find("#training_class").value).to eq item[:class]
   item[:tags].each do |tag|
     str = "(#{tag[:start]}, #{tag[:end]}): #{tag[:string]} - #{tag[:tag]}"
-    expect(find("#feedback-display-labels-content")).to have_content str
+    expect(find("#output")).to have_content str
   end
 end
 
