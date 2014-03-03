@@ -24,7 +24,8 @@ Feature: Label from web interface
     Given The feedback queue is empty
       And I submit "My name is Inigo Montoya" for labeling
     When I am on the training page
-      And I select the training input at 12 and 24
+      And I remove the label at index 0
+      And I select the training input at 11 and 24
       And I enter "Name" into the training_label field
       And I press "Add"
       And I press "Submit"
@@ -49,6 +50,7 @@ Feature: Label from web interface
       And I press "Label"
     Then I should see the wrong tags and class for the sun question
     When I visit "train"
+      And I remove the label at index 0
       And I tag the training input at 5 and 10 with "Predicate"
       And I tag the training input at 18 and 21 with "Subject"
       And I enter "Question" into the training_class field

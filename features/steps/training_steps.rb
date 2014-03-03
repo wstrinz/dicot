@@ -19,6 +19,10 @@ When(/^I check it$/) do
   puts page.evaluate_script('$("#output").text()')
 end
 
+When(/^I remove the label at index (\d+)$/) do |index|
+  page.evaluate_script('removeTag(' + index + ')')
+end
+
 When(/^I enter "(.*?)" into the (.*?) field$/) do |string, field|
   fill_in "#{field}", with: string
 end
