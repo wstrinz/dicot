@@ -1,4 +1,3 @@
-
 require_relative 'tokenizer'
 require_relative 'crf'
 require_relative 'tag'
