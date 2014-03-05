@@ -148,5 +148,13 @@ describe Dicot::Tag do
         Dicot::Tag.labels.should == ["Name", "TS", "arb"]
       end
     end
+
+    describe "special characters" do
+      let(:input_string) { "Banzo - Carts will NOT be open today :(  Stupid #polarvortex " }
+
+      it "sees no tags before retraining" do
+        Dicot::Tag.label(input_string).should == []
+      end
+    end
   end
 end
