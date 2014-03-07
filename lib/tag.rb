@@ -54,31 +54,57 @@ class Dicot
       end
 
       def train(string, tags)
-        char_pos = 0
-        in_label = false
-        current_label = nil
+        map = token_map(string)
 
-        data = Tokenizer.tokenize(string).each_with_object([]) do |token, arr|
-          loc = tags.keys.find{|l| char_pos.between?(l[0], l[1])}
-          if loc
-            unless current_label && tags[loc] == current_label
-              in_label = false
-            end
-            current_label = tags[loc]
+        if tags.empty?
+          data = map.values.map{|token| [token, "O"]}
+        else
+          data = []
+          tags.keys.each_with_index do |loc, i|
+            st = loc[0]
+            ed = loc[1]
 
-            if in_label
-              arr << [token, "I-#{tags[loc]}"]
+            tokens = map.select{|t|
+              t[0].between?(st, ed) &&
+              t[1].between?(st, ed)
+            }.to_a
+
+            # handle in between's (should be tagged "O")
+            if i > 0
+              last = tags.keys[i-1]
+              in_between = map.select do |t|
+                t[0].between?(last[1], st) &&
+                t[1].between?(last[1], st)
+              end
             else
-              arr << [token, "B-#{tags[loc]}"]
+              in_between = map.select do |t|
+                t[0].between?(0, st) &&
+                t[1].between?(0, st)
+              end
             end
-            in_label = true
-          else
-            arr << [token, "O"]
-            in_label = false
+
+            unless in_between.empty?
+              in_between.values.each do |token|
+                data << [token, 'O']
+              end
+            end
+
+            unless tokens.empty?
+              data << [tokens.first.last, "B-#{tags[loc]}"]
+
+              tokens[1..-1].each do |token|
+                data << [token.last, "I-#{tags[loc]}"]
+              end
+            end
           end
 
-          char_pos += token.size
-          char_pos += 1 if string[char_pos] == " "
+          # handle endings
+          last_tag_loc = tags.keys.max_by(&:last)
+
+          map.keys.select{|k| k[1] > last_tag_loc[1] }.each do |loc|
+            data << [map[loc], 'O']
+          end
+
         end
 
         CRF.add_training_seq(data)

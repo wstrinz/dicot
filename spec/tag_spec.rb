@@ -167,9 +167,10 @@ describe Dicot::Tag do
 
     describe "special characters" do
       let(:input_string) { "Banzo - Carts will NOT be open today :(  Stupid #polarvortex " }
+      let(:wrong_tags) { [{:string=>"Stupid#", :tag=>"TS", :start=>40, :end=>46}] }
 
-      it "sees no tags before retraining" do
-        Dicot::Tag.label(input_string).should == []
+      it "sees the wrong tags before retraining" do
+        Dicot::Tag.label(input_string).should == wrong_tags
       end
     end
   end

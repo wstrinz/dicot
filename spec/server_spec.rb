@@ -107,7 +107,9 @@ describe 'Dicot Server' do
       [")", "O"]
     ]}
 
-    let(:js_tags) {(0..(@feature_tags.size - 1)).to_a.each_with_object({}){|i,tags| tags[i] = @feature_tags[i] }}
+    let(:js_tags) {
+      (0..(@feature_tags.size - 1)).to_a.each_with_object({}){|i,tags| tags[i] = @feature_tags[i] }
+    }
 
     it do
       post "/add_sequence", {string: @feature_string, tags: js_tags}
