@@ -38,6 +38,14 @@ class Dicot
       CRF.feedback_queue
     end
 
+    def model_id
+      @model_id ||= "default"
+    end
+
+    def model_id=(id)
+      @model_id = id
+    end
+
     def surpress_warnings?
       @surpress_warnings ||= false
     end

@@ -1,16 +1,6 @@
 require_relative 'spec_helper.rb'
 
 describe Dicot::Tag do
-  before(:all) do
-    train_on_fixtures
-    enumerate_training_files
-  end
-
-  after(:all) do
-    remove_fixtures
-    remove_generated_training_files
-  end
-
   describe ".raw_label" do
     it "should label a string" do
       Dicot::Tag.raw_label("Hello I am a string").should_not be nil
@@ -87,12 +77,14 @@ describe Dicot::Tag do
   end
 
   context "retraining" do
-    before do
-      save_training_text
+    before(:all) do
+      @old_id = Dicot.model_id
+      Dicot::CRF.reset_model!
+      Dicot.model_id = "test-retrain"
     end
 
-    after do
-      restore_training_text
+    after(:all) do
+      Dicot.model_id = @old_id
     end
 
     it "can be retrained" do
@@ -114,7 +106,7 @@ describe Dicot::Tag do
 
       Dicot::CRF.training_queue << Dicot::Tokenizer.tokenize(str2).zip(trained)
       Dicot.retrain
-      Dicot::Tag.raw_label(str1).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
+      Dicot::Tag.raw_label(str1).first.map(&:last).should == %w{O O B-Name O O O O}
     end
   end
 
@@ -135,11 +127,13 @@ describe Dicot::Tag do
       let(:expected) { [["yes", "B-arb"],["no","O"],["yes","B-arb"]] }
 
       before(:all) do
-        @original_training_text = IO.read('model/train.txt')
+        @old_id = Dicot.model_id
+        Dicot::CRF.reset_model!
+        Dicot.model_id = "test-arb"
       end
 
       after(:all) do
-        open('model/train.txt','w'){|f| f.write @original_training_text}
+        Dicot.model_id = @old_id
       end
 
       it "adds to training queue" do
@@ -161,13 +155,23 @@ describe Dicot::Tag do
       end
 
       it "returns list of labels" do
-        Dicot::Tag.labels.should == ["Name", "TS", "arb"]
+        Dicot::Tag.labels.should == ["arb"]
       end
     end
 
     describe "special characters" do
       let(:input_string) { "Banzo - Carts will NOT be open today :(  Stupid #polarvortex " }
       let(:wrong_tags) { [{:string=>"Stupid#", :tag=>"TS", :start=>40, :end=>46}] }
+
+      before(:all) do
+        @old_id = Dicot.model_id
+        Dicot::CRF.reset_model!
+        Dicot.model_id = "test-special"
+      end
+
+      after(:all) do
+        Dicot.model_id = @old_id
+      end
 
       it "sees the wrong tags before retraining" do
         Dicot::Tag.label(input_string).should == wrong_tags

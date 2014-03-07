@@ -23,6 +23,7 @@ GEM
     fast-stemmer (1.0.2)
     gherkin (2.12.2)
       multi_json (~> 1.3)
+    gtokenizer (1.0.0)
     haml (4.0.5)
       tilt
     json (1.8.1)
@@ -87,6 +88,7 @@ DEPENDENCIES
   capybara
   capybara-webkit
   cucumber
+  gtokenizer
   haml
   pry
   rack-test

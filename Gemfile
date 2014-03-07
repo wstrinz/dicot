@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 gem 'wapiti'
 gem 'stuff-classifier'
 gem 'treat'
-#gem 'gtokenizer'
+gem 'gtokenizer'
 gem 'sinatra'
 gem 'haml'
 

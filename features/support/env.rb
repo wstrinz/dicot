@@ -38,13 +38,13 @@ def train_classifier_on_fixtures
 end
 
 def enumerate_training_files
-  $existing_training_files = Dir["model/train/**"]
+  $existing_training_files = Dir["model/**"] + Dir["model/train/**"]
 end
 
 def remove_generated_training_files
-  extra_files = Dir["model/train/**"] - $existing_training_files
+  extra_files = Dir["model/**"] + Dir["model/train/**"] - $existing_training_files
   extra_files.each do |f|
-    FileUtils.rm f
+    FileUtils.rm_rf f
   end
 end
 
