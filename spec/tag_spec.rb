@@ -159,6 +159,21 @@ describe Dicot::Tag do
       end
     end
 
+    describe "input order" do
+      let(:string) { "Place - Time and Manner" }
+      let(:tags) { { [8,11] => "T", [0,4] => "P", [17,22] => "M" } }
+      let(:expected) { [["Place", "B-P"],["-","O"],["Time","B-T"],["and","O"],["Manner","B-M"]] }
+
+      after do
+        Dicot::CRF.training_queue.clear
+      end
+
+      it "reorders input tags properly" do
+        Dicot.train(string, tags)
+        Dicot::CRF.training_queue.last.should == expected
+      end
+    end
+
     describe "special characters" do
       let(:input_string) { "Banzo - Carts will NOT be open today :(  Stupid #polarvortex " }
       let(:wrong_tags) { [{:string=>"Stupid#", :tag=>"TS", :start=>40, :end=>46}] }

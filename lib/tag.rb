@@ -53,8 +53,14 @@ class Dicot
         (CRF::model.labels - ['O']).map{|l| l[2..-1]}.uniq
       end
 
+      def sort_tags(tags)
+        sorted = tags.sort
+        sorted.each_with_object({}){|tag, h| h[tag[0]] = tag[1]}
+      end
+
       def train(string, tags)
         map = token_map(string)
+        tags = sort_tags(tags)
 
         if tags.empty?
           data = map.values.map{|token| [token, "O"]}
