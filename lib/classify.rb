@@ -4,7 +4,12 @@ class Dicot
   class Classify
     class << self
       def model
-        @model ||= StuffClassifier::Bayes.new("Dicot")
+        @model ||= StuffClassifier::Bayes.new(Dicot.model_id)
+        models[Dicot.model_id] = @model
+      end
+
+      def models
+        @models ||= {}
       end
 
       def reset!
