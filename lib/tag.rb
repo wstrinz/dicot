@@ -7,6 +7,21 @@ class Dicot
         labels
       end
 
+      def token_map(string)
+        copy = string.clone
+        map = {}
+        pos = 0
+        Tokenizer.tokenize(string).each do |token|
+          start = pos + copy.index(token)
+          ed = start + token.length - 1
+          map[[start, ed]] = string[start..ed]
+          pos = ed + 1
+          copy = string[pos..-1]
+        end
+
+        map
+      end
+
       def label(string)
         char_pos = 0
         tags = raw_label(string).first.each_with_object([]) do |raw, arr|

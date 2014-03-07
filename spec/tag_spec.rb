@@ -70,6 +70,22 @@ describe Dicot::Tag do
     end
   end
 
+  describe '.token_map' do
+    let(:string) { "Please remind me to remind them" }
+    let(:map) { {
+      [0,5] => 'Please',
+      [7,12] => 'remind',
+      [14,15] => 'me',
+      [17,18] => 'to',
+      [20,25] => 'remind',
+      [27,30] => 'them'
+    } }
+
+    it 'returns a hash of token positions' do
+      Dicot::Tag.token_map(string).should == map
+    end
+  end
+
   context "retraining" do
     before do
       save_training_text
