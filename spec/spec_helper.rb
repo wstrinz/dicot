@@ -8,6 +8,7 @@ RSpec.configure do |config|
     enumerate_training_files
     train_on_fixtures
     train_classifier_on_fixtures
+    Dicot.model_id = "test"
   end
 
   config.after(:all) do
