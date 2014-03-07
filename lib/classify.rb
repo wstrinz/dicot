@@ -3,18 +3,15 @@ require 'stuff-classifier'
 class Dicot
   class Classify
     class << self
-      def model
-        @model ||= StuffClassifier::Bayes.new(Dicot.model_id)
-        models[Dicot.model_id] = @model
-      end
+      StuffClassifier::Base.storage = StuffClassifier::FileStorage.new("model/class")
 
-      def models
-        @models ||= {}
+      def model(purge = false)
+        @model ||= StuffClassifier::Bayes.new(Dicot.model_id, purge_state: purge)
       end
 
       def reset!
         @model = nil
-        model
+        model(true)
       end
 
       def classes
@@ -23,6 +20,7 @@ class Dicot
 
       def train(string, klass)
         model.train(klass, string)
+        model.save_state
       end
 
       def training_queue
