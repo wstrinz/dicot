@@ -59,31 +59,31 @@ class Dicot
       end
 
       def train(string, tags)
-        map = token_map(string)
+        tmap = token_map(string)
         tags = sort_tags(tags)
 
         if tags.empty?
-          data = map.values.map{|token| [token, "O"]}
+          data = tmap.values.map{|token| [token, "O"]}
         else
           data = []
           tags.keys.each_with_index do |loc, i|
             st = loc[0]
             ed = loc[1]
 
-            tokens = map.select{|t|
+            tokens = tmap.select{|t|
               t[0].between?(st, ed) &&
               t[1].between?(st, ed)
             }.to_a
 
-            # handle in between's (should be tagged "O")
+            # handle in betweens (should be tagged "O")
             if i > 0
               last = tags.keys[i-1]
-              in_between = map.select do |t|
+              in_between = tmap.select do |t|
                 t[0].between?(last[1], st) &&
                 t[1].between?(last[1], st)
               end
             else
-              in_between = map.select do |t|
+              in_between = tmap.select do |t|
                 t[0].between?(0, st) &&
                 t[1].between?(0, st)
               end
@@ -107,8 +107,8 @@ class Dicot
           # handle endings
           last_tag_loc = tags.keys.max_by(&:last)
 
-          map.keys.select{|k| k[1] > last_tag_loc[1] }.each do |loc|
-            data << [map[loc], 'O']
+          tmap.keys.select{|k| k[1] > last_tag_loc[1] }.each do |loc|
+            data << [tmap[loc], 'O']
           end
 
         end

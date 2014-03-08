@@ -20,12 +20,12 @@ class Dicot
         File.join(training_full_path, "train.txt")
       end
 
-      def create_model_dir_if_not_exist
-        folder = MODEL_PATH + Dicot.model_id
-        unless File.exist?(folder)
-          Dir.mkdir(folder)
-        end
-      end
+     # def create_model_dir_if_not_exist
+     #   folder = MODEL_PATH + Dicot.model_id
+     #   unless File.exist?(folder)
+     #     Dir.mkdir(folder)
+     #   end
+     # end
 
       def create_training_dir_if_not_exist
         folder = TRAINING_BASE + "/" + Dicot.model_id
@@ -37,7 +37,6 @@ class Dicot
       def model
         unless @model || File.exist?(model_full_path)
           retrain(TRAINING_BASE + "/default.txt")
-          create_model_dir_if_not_exist
           @model.save(model_full_path)
         end
 
@@ -50,7 +49,6 @@ class Dicot
       end
 
       def save
-        create_model_dir_if_not_exist
         model.compact.save(model_full_path)
       end
 
