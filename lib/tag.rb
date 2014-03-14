@@ -23,6 +23,12 @@ class Dicot
       raise "Tagger #{self} failed to implement labels method"
     end
 
+    def tag_coordinates(tag_hashes)
+      tag_hashes.each_with_object({}) do |tag, h|
+        h[ [tag[:start].to_i, tag[:end].to_i] ] = tag[:tag]
+      end
+    end
+
     def train(string, tags)
       raise "Tagger #{self} failed to implement train method"
     end
