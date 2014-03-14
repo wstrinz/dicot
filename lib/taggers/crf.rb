@@ -12,35 +12,21 @@ class Dicot
         @dicot_model = dicot_model
       end
 
-      def training_full_path
-        File.join(training_base_path, dicot_model.name)
-      end
-
       def aggregated_training_file_path
-        File.join(training_full_path, "train.txt")
-      end
-
-      def create_training_dir_if_not_exist
-        unless File.exist?(training_full_path)
-          Dir.mkdir(training_full_path)
-        end
+        File.join(dicot_model.training_full_path, "train.txt")
       end
 
       def wapiti_model
-        unless @wapiti_model || File.exist?(model_full_path)
-          retrain(training_base_path + "/default.txt")
-          @wapiti_model.save(model_full_path)
+        unless @wapiti_model || File.exist?(dicot_model.model_full_path)
+          retrain(dicot_model.training_base_path + "/default.txt")
+          @wapiti_model.save(dicot_model.model_full_path)
         end
 
-        @wapiti_model ||= Wapiti.load(model_full_path)
+        @wapiti_model ||= Wapiti.load(dicot_model.model_full_path)
       end
 
       def save
-        wapiti_model.compact.save(model_full_path)
-      end
-
-      def label(data)
-        wapiti_model.label(data)
+        wapiti_model.compact.save(dicot_model.model_full_path)
       end
 
       def reset_model!
@@ -55,7 +41,7 @@ class Dicot
 
       def raw_label(string)
         tokens = dicot_model.tokenize(string)
-        labels = label([tokens])
+        labels = wapiti_model.label([tokens])
         labels
       end
 
@@ -91,10 +77,9 @@ class Dicot
       end
 
       def dump_queue
-        create_training_dir_if_not_exist
         file_name = "#{Time.now.to_i}_train.txt"
 
-        open(File.join(training_full_path, file_name), 'w') do |f|
+        open(File.join(dicot_model.training_full_path, file_name), 'w') do |f|
           training_queue.each do |ent|
             ent.each do |d|
               f.write d.join(" ") + "\n"
@@ -106,9 +91,8 @@ class Dicot
       end
 
       def aggregate_training_files
-        create_training_dir_if_not_exist
         open(aggregated_training_file_path, 'w') do |overall_file|
-          Dir[File.join(training_full_path, '/**')].each do |f|
+          Dir[File.join(dicot_model.training_full_path, '/**')].each do |f|
             overall_file.write(IO.read f)
           end
         end
@@ -129,7 +113,7 @@ class Dicot
       end
 
       def train(string, tags)
-        tmap = token_map(string)
+        tmap = dicot_model.tokenizer.token_map(string)
         tags = sort_tags(tags)
 
         if tags.empty?

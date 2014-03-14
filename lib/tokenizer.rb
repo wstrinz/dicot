@@ -40,7 +40,7 @@ class Dicot
       end
 
       if $use_treat
-        extend Treat::Core::DSL
+        include Treat::Core::DSL
         def tokenize(string)
           e = entity string
           e.apply(:chunk, :tokenize)

@@ -7,7 +7,7 @@ Then(/^I should see the head of the feedback queue$/) do
 end
 
 Given(/^The feedback queue is empty$/) do
-  Dicot::CRF.feedback_queue.clear
+  Dicot.model.tagger.feedback_queue.clear
 end
 
 Given(/^I submit "(.*?)" for labeling$/) do |string|
@@ -28,7 +28,7 @@ When(/^I enter "(.*?)" into the (.*?) field$/) do |string, field|
 end
 
 Then(/^the last entry in the training queue should have class "(.*?)"$/) do |klass|
-  Dicot::Classify.training_queue.last.last.should == klass
+  Dicot.model.classifier.training_queue.last.last.should == klass
 end
 
 When(/^I select the training input at (\d+) and (\d+)$/) do |start, ending|
@@ -45,11 +45,11 @@ end
 Then(/^the training queue should contain the Inigo Montoya data$/) do
   tokens = %w{My name is Inigo Montoya}
   tags = %w{O O O B-Name I-Name}
-  Dicot::CRF.training_queue.last.should == tokens.zip(tags)
+  Dicot.model.tagger.training_queue.last.should == tokens.zip(tags)
 end
 
 Then(/^the feedback queue should be empty$/) do
-  expect(Dicot::CRF.feedback_queue).to eq []
+  expect(Dicot.model.tagger.feedback_queue).to eq []
 end
 
 Then(/^the field "(.*?)" should be blank$/) do |field|

@@ -6,6 +6,7 @@ RSpec.configure do |config|
     Dicot.reset_model!("test")
     enumerate_training_files
     train_on_fixtures
+    train_classifier_on_fixtures
   end
 
   config.after(:all) do
@@ -26,6 +27,7 @@ end
 
 def train_classifier_on_fixtures
   Dicot.model.classifier.train("Where's Will? (Friday Morning)", "Out of Office")
+  Dicot.model.classifier.retrain
 end
 
 def enumerate_training_files

@@ -19,13 +19,13 @@ describe Dicot do
 
   describe 'feedback queue' do
     before do
-      Dicot::CRF.feedback_queue.clear
+      Dicot.model.tagger.feedback_queue.clear
     end
 
     it 'adds all labeled strings by default' do
       str = "Where's Will (Friday morning)"
       Dicot.label(str)
-      Dicot::CRF.feedback_queue.last.should ==
+      Dicot.model.tagger.feedback_queue.last.should ==
       {
         string: str,
         tags:
@@ -51,11 +51,11 @@ describe Dicot do
       str = "Bla Bla mostly arbitray text I yellow banana here"
       trained = %w{O O O O O O B-unexpected I-unexpected O}
 
-      Dicot::Tag.raw_label(str).first.map(&:last).should_not == trained
-      Dicot::CRF.training_queue << Dicot::Tokenizer.tokenize(str).zip(trained)
+      Dicot.model.tagger.raw_label(str).first.map(&:last).should_not == trained
+      Dicot.model.tagger.training_queue << Dicot.model.tokenizer.tokenize(str).zip(trained)
       Dicot.retrain
 
-      Dicot::Tag.raw_label(str).first.map(&:last).should == trained
+      Dicot.model.tagger.raw_label(str).first.map(&:last).should == trained
     end
   end
 
@@ -73,13 +73,13 @@ describe Dicot do
     end
 
     it "adds to training queue" do
-      Dicot.train(string, tags)
-      Dicot::CRF.training_queue.last.should == expected
+      Dicot.model.train(string, tags, "test")
+      Dicot.model.tagger.training_queue.last.should == expected
     end
 
     it "retrains using new data" do
-      Dicot::CRF.retrain
-      Dicot::Tag.raw_label(string).first.should == expected
+      Dicot.model.retrain
+      Dicot.model.tagger.raw_label(string).first.should == expected
     end
 
     it "labels using new data" do

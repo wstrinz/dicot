@@ -16,7 +16,7 @@ class Dicot
 
       def retrain
         Dicot.retrain
-        Dicot::CRF.save
+        Dicot.model.tagger.save
       end
 
       def add_sequence(data)
@@ -54,7 +54,7 @@ class Dicot
           symbolize_keys(entry)
         }
 
-        Dicot::CRF.feedback_queue = new_queue
+        Dicot.model.tagger.feedback_queue = new_queue
       end
     end
 
@@ -113,12 +113,12 @@ class Dicot
 
     get '/list_tags' do
       content_type :json
-      Dicot::Tag.labels.to_json
+      Dicot.model.tagger.labels.to_json
     end
 
     get '/list_classes' do
       content_type :json
-      Dicot::Classify.classes.to_a.to_json
+      Dicot.model.classifier.labels.to_a.to_json
     end
 
     run! if app_file == $0

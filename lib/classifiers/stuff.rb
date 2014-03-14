@@ -5,7 +5,7 @@ class Dicot
       attr :internal_model
 
       def initialize(dicot_model)
-        StuffClassifier::Base.storage = StuffClassifier::FileStorage.new(dicot_model.model_base_path)
+        StuffClassifier::Base.storage = StuffClassifier::FileStorage.new(File.join(dicot_model.model_base_path, dicot_model.name))
         @internal_model = StuffClassifier::Bayes.new(dicot_model.name, purge_state: false)
       end
 

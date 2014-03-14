@@ -1,32 +1,34 @@
 require_relative 'spec_helper.rb'
 
 describe Dicot::Tag do
+  subject { Dicot.model.tagger }
+
   describe ".raw_label" do
     it "should label a string" do
-      Dicot::Tag.raw_label("Hello I am a string").should_not be nil
+      subject.raw_label("Hello I am a string").should_not be nil
     end
 
     it "correctly labels trained string" do
       str = "Where's Will (Friday morning)"
-      Dicot::Tag.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
+      subject.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
     end
 
 
     it 'identifies features in novel string' do
       str = "Where's Will (Ragnarok morning)"
-      Dicot::Tag.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
+      subject.raw_label(str).first.map(&:last).should == %w{O O B-Name O B-TS I-TS O}
     end
 
     it 'respects feature boundaries' do
       str = "Where's Will this afternoon"
-      Dicot::Tag.raw_label(str).first.map(&:last).should == %w{O O B-Name B-TS I-TS}
+      subject.raw_label(str).first.map(&:last).should == %w{O O B-Name B-TS I-TS}
     end
   end
 
   describe ".label" do
     it 'recognizes and extracts labels' do
       str = "Where's Will (Friday morning)"
-      Dicot::Tag.label(str).should ==
+      subject.label(str).should ==
       [
         {string: "Will", tag: "Name", start: 8, end: 11},
         {string: "Friday morning", tag: "TS", start: 14, end: 27 }
@@ -35,7 +37,7 @@ describe Dicot::Tag do
 
     it "gracefully handles things it doesn't understand" do
       str = "Test Input"
-      Dicot::Tag.label(str).should == []
+      subject.label(str).should == []
     end
 
 
@@ -44,22 +46,23 @@ describe Dicot::Tag do
         save_training_text
         @str = "Weird token's?"
         @train = %w{O B-test I-test I-test}
-        Dicot::CRF.training_queue << Dicot::Tokenizer.tokenize(@str).zip(@train)
-        Dicot::CRF.retrain
+        Dicot.model.tagger.training_queue << Dicot.model.tokenizer.tokenize(@str).zip(@train)
+        Dicot.model.tagger.retrain
       end
 
       after do
         restore_training_text
-        Dicot::CRF.retrain
+        Dicot.model.tagger.retrain
         restore_training_text
       end
 
       it 'handles tokens properly' do
-        Dicot::Tag.label(@str).should == [{ string: "token's?", tag: "test", start: 6, end: 13 }]
+        subject.label(@str).should == [{ string: "token's?", tag: "test", start: 6, end: 13 }]
       end
     end
   end
 
+  # TODO create tokenizer spec
   describe '.token_map' do
     let(:string) { "Please remind me to remind them" }
     let(:map) { {
@@ -72,31 +75,23 @@ describe Dicot::Tag do
     } }
 
     it 'returns a hash of token positions' do
-      Dicot::Tag.token_map(string).should == map
+      Dicot.model.tokenizer.token_map(string).should == map
     end
   end
 
   context "retraining" do
-    before(:all) do
-      @old_id = Dicot.model_id
-      Dicot::CRF.reset_model!
-      Dicot.model_id = "test-retrain"
-    end
-
-    after(:all) do
-      Dicot.model_id = @old_id
-    end
+    let(:model) { Dicot::Model.new(name: 'test-retrain') }
 
     it "can be retrained" do
       str = "Bla Bla mostly arbitray text I wrote right here"
       untrained = %w{O O O O O O O O O}
       trained = %w{O O O O O O B-thing I-thing O}
 
-      Dicot::Tag.raw_label(str).first.map(&:last).should == untrained
-      Dicot::CRF.training_queue << Dicot::Tokenizer.tokenize(str).zip(trained)
-      Dicot.retrain
+      model.tagger.raw_label(str).first.map(&:last).should == untrained
+      model.tagger.training_queue << model.tokenizer.tokenize(str).zip(trained)
+      model.tagger.retrain
 
-      Dicot::Tag.raw_label(str).first.map(&:last).should == trained
+      model.tagger.raw_label(str).first.map(&:last).should == trained
     end
 
     it "still correctly labels known strings" do
@@ -104,19 +99,17 @@ describe Dicot::Tag do
       str2 = "Where's Will (on the Ragnarok morning)"
       trained = %w{O O B-Name O O O B-TS I-TS O}
 
-      Dicot::CRF.training_queue << Dicot::Tokenizer.tokenize(str2).zip(trained)
-      Dicot.retrain
-      Dicot::Tag.raw_label(str1).first.map(&:last).should == %w{O O B-Name O O O O}
+      model.tagger.training_queue << model.tokenizer.tokenize(str2).zip(trained)
+      model.tagger.retrain
+      model.tagger.raw_label(str1).first.map(&:last).should == %w{O O B-Name O O O O}
     end
   end
 
   describe "generates dummy model if none exists" do
-    before { save_model }
-    after { restore_model }
+    let(:empty_model) { Dicot::Model.new(name: 'empty_model') }
 
     it do
-      File.delete 'model/model.mod'
-      Dicot::Tag.raw_label("anything should be O").first.map(&:last).should == %w{O O O O}
+      empty_model.tagger.raw_label("anything should be O").first.map(&:last).should == %w{O O O O}
     end
   end
 
@@ -127,27 +120,21 @@ describe Dicot::Tag do
       let(:expected) { [["yes", "B-arb"],["no","O"],["yes","B-arb"]] }
 
       before(:all) do
-        @old_id = Dicot.model_id
-        Dicot::CRF.reset_model!
-        Dicot.model_id = "test-arb"
-      end
-
-      after(:all) do
-        Dicot.model_id = @old_id
+        @model = Dicot::Model.new(name: 'test-arb')
       end
 
       it "adds to training queue" do
-        Dicot.train(string, tags)
-        Dicot::CRF.training_queue.last.should == expected
+        @model.tagger.train(string, tags)
+        @model.tagger.training_queue.last.should == expected
       end
 
       it "retrains using new data" do
-        Dicot::CRF.retrain
-        Dicot::Tag.raw_label(string).first.should == expected
+        @model.tagger.retrain
+        @model.tagger.raw_label(string).first.should == expected
       end
 
       it "labels using new data" do
-        Dicot::Tag.label(string).should ==
+        @model.tagger.label(string).should ==
         [
             {:string=>"yes", :tag=>"arb", :start=>0, :end=>2},
             {:string=>"yes", :tag=>"arb", :start=>7, :end=>9}
@@ -155,7 +142,7 @@ describe Dicot::Tag do
       end
 
       it "returns list of labels" do
-        Dicot::Tag.labels.should == ["arb"]
+        @model.tagger.labels.should == ["arb"]
       end
     end
 
@@ -165,12 +152,12 @@ describe Dicot::Tag do
       let(:expected) { [["Place", "B-P"],["-","O"],["Time","B-T"],["and","O"],["Manner","B-M"]] }
 
       after do
-        Dicot::CRF.training_queue.clear
+        Dicot.model.tagger.training_queue.clear
       end
 
       it "reorders input tags properly" do
         Dicot.train(string, tags)
-        Dicot::CRF.training_queue.last.should == expected
+        Dicot.model.tagger.training_queue.last.should == expected
       end
     end
 
@@ -179,17 +166,11 @@ describe Dicot::Tag do
       let(:wrong_tags) { [{:string=>"Stupid#", :tag=>"TS", :start=>40, :end=>46}] }
 
       before(:all) do
-        @old_id = Dicot.model_id
-        Dicot::CRF.reset_model!
-        Dicot.model_id = "test-special"
-      end
-
-      after(:all) do
-        Dicot.model_id = @old_id
+        @model = Dicot::Model.new(name: "test-special")
       end
 
       it "sees the wrong tags before retraining" do
-        Dicot::Tag.label(input_string).should == wrong_tags
+        @model.label(input_string).should == wrong_tags
       end
     end
   end

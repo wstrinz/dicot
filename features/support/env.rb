@@ -25,7 +25,7 @@ at_exit do
 end
 
 def train_on_fixtures
-  Dicot::CRF.retrain('spec/fixtures/train.txt')
+  Dicot.model.tagger.retrain('spec/fixtures/train.txt')
   if File.exist? 'model/train.txt'
     FileUtils.copy 'model/train.txt', 'model/train.txt.bak'
   end
@@ -34,7 +34,8 @@ def train_on_fixtures
 end
 
 def train_classifier_on_fixtures
-  Dicot::Classify.train("Where's Will? (Friday Morning)", "Out of Office")
+  Dicot.model.classifier.train("Where's Will? (Friday Morning)", "Out of Office")
+  Dicot.model.classifier.retrain
 end
 
 def enumerate_training_files

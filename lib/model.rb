@@ -8,6 +8,9 @@ class Dicot
       @classifier = Classify.for(classify).new(self)
       @tagger = Tag.for(tag).new(self)
       @surpress_warnings = surpress_warnings
+
+      create_training_dir_if_not_exist
+      create_model_dir_if_not_exist
     end
 
     def save
@@ -51,12 +54,28 @@ class Dicot
       File.join(model_dir, "train")
     end
 
+    def training_full_path
+      File.join(training_base_path, name)
+    end
+
     def model_base_path
       File.join(model_dir, name)
     end
 
     def model_full_path
-      File.join(model_base_path, ".mod")
+      File.join(model_base_path, "#{name}.mod")
+    end
+
+    def create_training_dir_if_not_exist
+      unless File.exist?(training_full_path)
+        Dir.mkdir(training_full_path)
+      end
+    end
+
+    def create_model_dir_if_not_exist
+      unless File.exist?(model_base_path)
+        Dir.mkdir(model_base_path)
+      end
     end
   end
 end
