@@ -1,7 +1,27 @@
+class Dicot
+  DICOT_BASE = File.expand_path File.join(File.dirname(__FILE__), '..')
+end
+
+Dir['lib/mixins/**'].each do |f|
+  require File.join Dicot::DICOT_BASE, f
+end
+
 require_relative 'tokenizer'
-require_relative 'crf'
 require_relative 'tag'
 require_relative 'classify'
+require_relative 'model'
+
+Dir[File.join(Dicot::DICOT_BASE, 'lib/classifiers/**')].each do |f|
+  require f
+end
+
+Dir[File.join(Dicot::DICOT_BASE, 'lib/taggers/**')].each do |f|
+  require f
+end
+
+Dir[File.join(Dicot::DICOT_BASE, 'lib/tokenizers/**')].each do |f|
+  require f
+end
 
 class Dicot
   class << self
@@ -12,38 +32,37 @@ class Dicot
         class: classify(string)
       }
 
-      CRF.feedback_queue << lab if add_to_feedback
+      model.tagger.feedback_queue << lab if add_to_feedback
 
       lab
     end
 
     def features(string)
-      Tag.label(string)
+      model.label(string)
     end
 
     def classify(string)
-      Classify.classify(string)
+      model.classify(string)
     end
 
     def train(string, tags, klass=nil)
-      Tag.train(string, tags)
-      Classify.training_queue << [string, klass] if klass
+      model.train(string, tags, klass)
     end
 
     def retrain
-      CRF.retrain
+      model.retrain
     end
 
     def feedback_queue
-      CRF.feedback_queue
+      model.tagger.feedback_queue
     end
 
-    def model_id
-      @model_id ||= "default"
+    def model
+      @model ||= Model.new(surpress_warnings: surpress_warnings?)
     end
 
-    def model_id=(id)
-      @model_id = id
+    def reset_model!(name="default")
+      @model = Model.new(name: name, surpress_warnings: surpress_warnings?)
     end
 
     def surpress_warnings?

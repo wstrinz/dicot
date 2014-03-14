@@ -1,14 +1,11 @@
 require_relative '../lib/dicot.rb'
 
-Dicot.surpress_warnings=true
-
 RSpec.configure do |config|
   config.before(:all) do
     save_model
+    Dicot.reset_model!("test")
     enumerate_training_files
     train_on_fixtures
-    train_classifier_on_fixtures
-    Dicot.model_id = "test"
   end
 
   config.after(:all) do
@@ -19,7 +16,7 @@ RSpec.configure do |config|
 end
 
 def train_on_fixtures
-  Dicot::CRF.retrain('spec/fixtures/train.txt')
+  Dicot.model.tagger.retrain('spec/fixtures/train.txt')
   if File.exist? 'model/train.txt'
     FileUtils.copy 'model/train.txt', 'model/train.txt.bak'
   end
@@ -28,7 +25,7 @@ def train_on_fixtures
 end
 
 def train_classifier_on_fixtures
-  Dicot::Classify.train("Where's Will? (Friday Morning)", "Out of Office")
+  Dicot.model.classifier.train("Where's Will? (Friday Morning)", "Out of Office")
 end
 
 def enumerate_training_files
