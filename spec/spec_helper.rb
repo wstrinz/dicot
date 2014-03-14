@@ -2,9 +2,9 @@ require_relative '../lib/dicot.rb'
 
 RSpec.configure do |config|
   config.before(:all) do
+    enumerate_training_files
     save_model
     Dicot.reset_model!("test")
-    enumerate_training_files
     train_on_fixtures
     train_classifier_on_fixtures
   end
