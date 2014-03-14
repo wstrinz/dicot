@@ -1,6 +1,6 @@
 require_relative 'spec_helper.rb'
 
-describe Dicot::Tag do
+describe Dicot::Taggers::CRF do
   subject { Dicot.model.tagger }
 
   describe ".raw_label" do

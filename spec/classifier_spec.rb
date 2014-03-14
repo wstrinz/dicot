@@ -1,51 +1,61 @@
-
 require_relative 'spec_helper.rb'
 
-describe Dicot::Classifiers do
-  let(:data) {[
-    ["This is a test message", "test"],
-    ["Some other sort of message?", "not-test"],
-    ["Remind me to do a thing", "remind"]
-  ]}
+classifiers = [:stuff]
 
-  describe ".train" do
-    before do
-      Dicot.model.classifier.reset!
-    end
+describe "Classifier" do
+  classifiers.each do |classifier|
+    let(:model) { Dicot::Model.new(classify: classifier) }
+    subject { model.classifier }
 
-    it do
-      data.each do |d|
-        Dicot.model.classifier.train(d[0], d[1])
+    let(:str) { "Where's Will (Friday morning)" }
+    let(:expected) { "Out of Office" }
+    let(:data) {[
+      ["This is a test message", "test"],
+      ["Some other sort of message?", "not-test"],
+      ["Remind me to do a thing", "remind"]
+    ]}
+
+    describe classifier do
+      describe "#train" do
+        before do
+          subject.reset!
+        end
+
+        it do
+          data.each do |d|
+            subject.train(d[0], d[1])
+          end
+
+          subject.retrain
+
+          data.each do |d|
+            subject.classify(d[0]).should == d[1]
+          end
+        end
+
+        it "isn't totally robust" do
+          subject.train("What's up?", "chat")
+        end
       end
 
-      Dicot.model.classifier.retrain
+      describe "#classify" do
+        before do
+          subject.reset!
+          data.each do |d|
+            subject.train(*d)
+          end
 
-      data.each do |d|
-        Dicot.model.classifier.classify(d[0]).should == d[1]
+          subject.retrain
+        end
+
+        it "works usually" do
+          subject.classify("This is a test message").should == "test"
+        end
+
+        it "can classify repeated words" do
+          subject.classify("Remind me to Remind").should == "remind"
+        end
       end
-    end
-
-    it "isn't totally robust" do
-      Dicot.model.classifier.train("What's up?", "chat")
-    end
-  end
-
-  describe ".classify" do
-    before do
-      Dicot.model.classifier.reset!
-      data.each do |d|
-        Dicot.model.classifier.train(*d)
-      end
-
-      Dicot.model.classifier.retrain
-    end
-
-    it "works usually" do
-      Dicot.model.classifier.classify("This is a test message").should == "test"
-    end
-
-    it "can classify repeated words" do
-      Dicot.model.classifier.classify("Remind me to Remind").should == "remind"
     end
   end
 end
